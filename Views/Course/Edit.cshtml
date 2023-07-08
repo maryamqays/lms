@@ -1,0 +1,177 @@
+﻿@model Lms.Models.Course
+
+@{
+
+    Layout = "AdminLayout";
+}
+
+<h1>Edit New Course </h1>
+
+<hr />
+
+<div class="row">
+    <div class="col">
+        <form asp-controller="Course" asp-action="Edit" enctype="multipart/form-data">
+            <div class="form-group">
+                <label asp-for="EnTitle" class="control-label"></label>
+                <input asp-for="EnTitle" class="form-control" />
+                <span asp-validation-for="EnTitle" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ArTitle" class="control-label"></label>
+                <input asp-for="ArTitle" class="form-control" />
+                <span asp-validation-for="ArTitle" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Overview" class="control-label"></label>
+                <textarea asp-for="Overview" class="form-control"></textarea>
+                <span asp-validation-for="Overview" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Tags" class="control-label"></label>
+                <input asp-for="Tags" id="tags-input" class="form-control"></input>
+                <span asp-validation-for="Tags" class="text-danger"></span>
+                <span id="word-count" class="text-info"></span>
+            </div>
+
+           
+            <div class="form-group">
+                <label asp-for="CourseCategoryId" class="control-label"></label>
+                <select asp-for="CourseCategoryId" asp-items="@(new SelectList(ViewBag.CourseCategoryOptions, "Id", "CombinedName"))" class="form-control"></select>
+                <span asp-validation-for="CourseCategoryId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="CourseStartingDate" class="control-label"></label>
+                <input asp-for="CourseStartingDate" class="form-control" type="date" />
+                <span asp-validation-for="CourseStartingDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CourseEndingDate" class="control-label"></label>
+                <input asp-for="CourseEndingDate" class="form-control" type="date" />
+                <span asp-validation-for="CourseEndingDate" class="text-danger"></span>
+            </div>
+          
+            <div class="form-group">
+                <label asp-for="CourseIntroductionVideo" class="control-label"></label>
+                <input asp-for="CourseIntroductionVideo" class="form-control"></input>
+                <span asp-validation-for="CourseIntroductionVideo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CourseFlyer" class="control-label"></label>
+                <input type="text" value="@Model.CourseFlyer" readonly class="form-control" />
+                <input type="hidden" asp-for="CourseFlyer" /> <!-- Add this line -->
+                <input type="file" name="courseFlyerFile" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="CoursePdfFile" class="control-label"></label>
+                <input type="text" value="@Model.CoursePdfFile" readonly class="form-control" />
+                <input type="hidden" asp-for="CoursePdfFile" /> <!-- Add this line -->
+                <input type="file" name="coursePdfFile" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="IsPaid">Is Course Paid?</label>
+                <input asp-for="IsPaid" type="checkbox" class="toggle-checkbox" readonly />
+            </div>
+            
+            <div class="form-group">
+                <label asp-for="IsAdminApproved">IsAdminApproved</label>
+                <input asp-for="IsAdminApproved" type="checkbox" class="toggle-checkbox" readonly />
+            </div>
+            <div class="form-group">
+                <label asp-for="IsActive">IsActive</label>
+                <input asp-for="IsActive" type="checkbox" class="toggle-checkbox" readonly />
+            </div>
+            <div class="form-group">
+                <label asp-for="IsFeatured">IsFeatured</label>
+                <input asp-for="IsFeatured" type="checkbox" class="toggle-checkbox" readonly />
+            </div>
+            <div class="form-group">
+                <label asp-for="Prerequisite" class="control-label"></label>
+                <textarea asp-for="Prerequisite" class="form-control"></textarea>
+                <span asp-validation-for="Prerequisite" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Level" class="control-label"></label>
+                <select asp-for="Level" class="form-control">
+                    <option value="">-- Level --</option>
+                    <option value="Easy">Easy</option>
+                    <option value="Mid">Mid</option>
+                    <option value="Hard">Hard</option>
+                </select>
+                <span asp-validation-for="Level" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Outcomes" class="control-label"></label>
+                <textarea asp-for="Outcomes" class="form-control"></textarea>
+                <span asp-validation-for="Outcomes" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="ImportantDates" class="control-label"></label>
+                <input asp-for="ImportantDates" class="form-control"></input>
+                <span asp-validation-for="ImportantDates" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TargetAudience" class="control-label"></label>
+                <input asp-for="TargetAudience" class="form-control"></input>
+                <span asp-validation-for="TargetAudience" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Language" class="control-label"></label>
+                <select asp-for="Language" class="form-control">
+                    <option value="">-- Language --</option>
+                    <option value="arabic">arabic</option>
+                    <option value="english">english</option>
+                    <option value="other">other</option>
+                </select>
+                <span asp-validation-for="Language" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Fee" class="control-label"></label>
+                <input asp-for="Fee" class="form-control">
+                <span asp-validation-for="Fee" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IsPreRecorded"></label>
+                <input asp-for="IsPreRecorded" type="checkbox" class="toggle-checkbox" readonly />
+            </div>
+            <div class="form-group">
+                <label asp-for="IsDeleted"></label>
+                <input asp-for="IsDeleted" type="checkbox" class="toggle-checkbox" readonly />
+            </div>
+            <div class="form-group">
+                <label asp-for="IsHidden"></label>
+                <input asp-for="IsHidden" type="checkbox" class="toggle-checkbox" readonly />
+            </div>
+            <div class="form-group">
+                <label asp-for="IsPrivate"></label>
+                <input asp-for="IsPrivate" type="checkbox" class="toggle-checkbox" readonly />
+            </div>
+            <div class="form-group">
+                <label asp-for="PassingMark" class="control-label"></label>
+                <input asp-for="PassingMark" class="form-control">
+                <span asp-validation-for="PassingMark" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Livestream" class="control-label"></label>
+                <input asp-for="Livestream" class="form-control">
+                <span asp-validation-for="Livestream" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary mt-3">Submit</button>
+                <a asp-action="Index" class="btn btn-secondary mt-3">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#tags-input').on('input', function () {
+            var words = $(this).val().split(' ');
+            $('#word-count').text('Word count: ' + words.length);
+        });
+    });
+</script>

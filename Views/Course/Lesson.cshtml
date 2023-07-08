@@ -1,0 +1,211 @@
+﻿@using System.Text.RegularExpressions;
+@using System.Security.Claims;
+@model LMS.Models.ViewModel.LessonViewModel
+@using Microsoft.AspNetCore.Mvc.Localization;
+
+@inject IViewLocalizer Localizer
+@{
+    // Get the current culture
+    var culture = System.Threading.Thread.CurrentThread.CurrentCulture.Name;
+}
+
+<section class="lesson-image ">
+    <div class="relative pt-40" style="margin-top:3rem;">
+        <div class=" d-flex justify-center items-center">
+            <div class="youtube-container">
+                <iframe id="youtube-iframe" width="1450" height="800" class="w-full h-full js-gallery" data-gallery="gallery1"></iframe>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<div class="d-flex flex-column">
+
+    @if (culture == "ar-SA")
+    {
+        <section class="pt-40 layout-pb-lg lg:order-2">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xxl-8 col-xl-7 col-lg-8">
+                        <div class="course-content" id="course-content" dir="rtl">
+                            <h4 class="text-18 fw-500">الوصف</h4>
+                            <p class="mt-30" id="course-description"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    }
+    else
+    {
+        <section class="pt-40 layout-pb-lg lg:order-2">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xxl-8 col-xl-7 col-lg-8">
+                        <div class="course-content" id="course-content">
+                            <h4 class="text-18 fw-500">Description</h4>
+                            <p class="mt-30" id="course-description"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    }
+
+    <aside class="lesson-sidebar -type-2 lg:order-1">
+        <div class="px-30 sm:px-20">
+            <div class="accordion -block-2 text-left js-accordion mt-30">
+                @foreach (var chapter in Model.CourseChapters.OrderBy(c => c.Indx))
+                {
+                    <div class="accordion__item">
+                        @if (culture == "ar-SA")
+                        {
+                            <div class="accordion__button py-20 px-30 bg-light-4" style="direction:rtl;">
+                                <span class="text-17 fw-500 text-dark-1">@chapter.Name</span>
+
+                                <div class="d-flex items-center">
+                                    <div class="accordion__icon">
+                                        <div class="icon" data-feather="chevron-down"></div>
+                                        <div class="icon" data-feather="chevron-up"></div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="accordion__button py-20 px-30 bg-light-4">
+                                <div class="d-flex items-center">
+                                    <div class="accordion__icon">
+                                        <div class="icon" data-feather="chevron-down"></div>
+                                        <div class="icon" data-feather="chevron-up"></div>
+                                    </div>
+
+                                    <span class="text-17 fw-500 text-dark-1">@chapter.Name</span>
+
+                                </div>
+                            </div>
+                        }
+
+
+                        <div class="accordion__content">
+                            <div class="accordion__content__inner px-30 py-30">
+                                <div class="y-gap-30">
+                                    @foreach (var content in Model.CourseChapterContents.Where(c => c.CourseChapterId == chapter.Id).OrderBy(c => c.Indx))
+                                    {
+                                        var videoId = string.Empty;
+                                        if (!string.IsNullOrEmpty(content.Youtube))
+                                        {
+                                            var match = Regex.Match(content.Youtube, "(?<=v=)[^&]+");
+                                            videoId = match.Value;
+                                        }
+                                        @if (culture == "ar-SA")
+                                        {
+                                            <div class="" style="direction:rtl;">
+                                                <div class="d-flex">
+
+
+
+                                                    <div class="">
+                                                        <div class="content-title text-purple-1 underline" data-duration="@content.Duration" data-youtube-id="@videoId" data-description="@content.Description" onclick="changeIconColor(event, this, '@content.Description', '@videoId')">
+                                                            @content.Title
+                                                        </div>
+                                                        <div class="d-flex x-gap-20 items-center pt-5">
+                                                            <a class="text-14 lh-1 text-purple-1 underline">@content.Duration دقيقة</a>
+                                                            <input type="checkbox" class="content-checkbox" data-content-id="@content.Id" disabled />
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="d-flex justify-center items-center size-30 rounded-full bg-purple-3 mr-10">
+                                                        <div class="icon-play text-9" id="icon-play"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="">
+                                                <div class="d-flex">
+                                                    <div class="d-flex justify-center items-center size-30 rounded-full bg-purple-3 mr-10">
+                                                        <div class="icon-play text-9" id="icon-play"></div>
+                                                    </div>
+
+
+                                                    <div class="">
+                                                        <div class="content-title text-purple-1 underline" data-duration="@content.Duration" data-youtube-id="@videoId" data-description="@content.Description" onclick="changeIconColor(event, this, '@content.Description', '@videoId')">@content.Title</div>
+                                                        <div class="d-flex x-gap-20 items-center pt-5">
+                                                            <a class="text-14 lh-1 text-purple-1 underline">@content.Duration min</a>
+                                                            <input type="checkbox" class="content-checkbox" data-content-id="@content.Id" disabled />
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                }
+            </div>
+        </div>
+
+
+    </aside>
+</div>
+
+<script>
+    $(window).on('load', function () {
+        showCourseIntroductionVideo();
+    });
+
+    function showCourseIntroductionVideo() {
+        var defaultVideoUrl = '@Model.Course.CourseIntroductionVideo';
+        var defaultVideoId = extractVideoId(defaultVideoUrl);
+
+        if (defaultVideoId) {
+            var defaultEmbeddedUrl = "https://www.youtube.com/embed/" + defaultVideoId;
+            $("#youtube-iframe").attr("src", defaultEmbeddedUrl);
+        }
+
+        function extractVideoId(url) {
+            var match = /(?:[?&]v=|\/embed\/|\/\d\/|\/v\/|https?:\/\/(?:www\.)?youtube\.com\/watch(?:\?v=|\/\d\/|\/v\/)|https?:\/\/(?:www\.)?youtube\.com\/v\/)([^&\n?#]+)/.exec(url);
+            return match && match[1];
+        }
+    }
+
+    var lastClickedIcon = null;
+    function changeIconColor(event, element, description, videoId) {
+        event.stopPropagation(); // Prevent click event propagation
+
+        // If there was a previously clicked icon, reset its color
+        if (lastClickedIcon) {
+            lastClickedIcon.classList.add('text-9');
+        }
+
+        // Find the icon related to the clicked element
+        var icon = element.parentElement.parentElement.querySelector('.icon-play');
+
+        // If the icon is found, change its color and remember it as the lastclicked icon
+        if (icon) {
+            icon.classList.remove('text-9');
+            lastClickedIcon = icon;
+        }
+
+        // Update the course description and video
+        var courseDescription = document.getElementById('course-description');
+
+        if (courseDescription && description) {
+            courseDescription.innerHTML = description;
+        }
+
+        if (videoId) {
+            var embeddedUrl = "https://www.youtube.com/embed/" + videoId;
+            document.getElementById('youtube-iframe').src = embeddedUrl;
+        }
+    }</script>

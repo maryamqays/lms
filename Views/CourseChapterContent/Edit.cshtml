@@ -1,0 +1,80 @@
+﻿@model Lms.Models.CourseChapterContent
+@{
+
+    Layout = "AdminLayout";
+}
+
+<h1> Edit Course Chapter Content</h1>
+<div class="row">
+    <div class="col">
+        <form asp-controller="CourseChapterContent" asp-action="Edit" enctype="multipart/form-data">
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <textarea asp-for="Description" class="form-control"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Indx" class="control-label"></label>
+                <input asp-for="Indx" class="form-control" />
+                <span asp-validation-for="Indx" class="text-danger"></span>
+            </div>
+
+            <div class="form-group" hidden>
+                <label asp-for="CourseChapterId" class="control-label"></label>
+                <input asp-for="CourseChapterId" class="form-control" />
+                <span asp-validation-for="CourseChapterId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label for="content-type-select" class="control-label">Content Type</label>
+                <select id="content-type-select" class="form-control">
+                    <option value="file">File</option>
+                    <option value="youtubevideo">YouTube Video</option>
+                </select>
+            </div>
+
+            <div class="form-group" id="file-input-group">
+                <label for="file-input" class="control-label">File Path</label>
+                <input type="text" id="file-input" class="form-control" readonly />
+                <input type="file" id="uploadBox" name="file" class="form-control" />
+            </div>
+
+            <div class="form-group" id="youtube-input-group" style="display: none;">
+                <label for="youtube-input" class="control-label">YouTube URL</label>
+                <input type="text" id="youtube-input" class="form-control" />
+                <span id="youtube-validation" class="text-danger"></span>
+            </div>
+
+
+
+            <div class="form-group">
+                <label asp-for="Duration" class="control-label"></label>
+                <input asp-for="Duration" class="form-control" />
+                <span asp-validation-for="Duration" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary mt-3">Create</button>
+                <a asp-action="Index" class="btn btn-secondary mt-3">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#content-type-select").on("change", function () {
+            var contentType = $(this).val();
+            if (contentType === "file") {
+                $("#file-input-group").show();
+                $("#youtube-input-group").hide();
+            } else if (contentType === "youtubevideo") {
+                $("#file-input-group").hide();
+                $("#youtube-input-group").show();
+            }
+        });
+    });
+</script>

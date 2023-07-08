@@ -1,0 +1,306 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Lms</title>
+    <script src="https://kit.fontawesome.com/8454d5fb35.js" crossorigin="anonymous"></script>
+
+    <!-- Google fonts -->
+ 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin="" />
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+    <link rel="stylesheet" href="~/css/vendors.css">
+    <link rel="stylesheet" href="~/css/main.css">
+
+
+</head>
+
+
+<body class="preloader-visible" data-barba="wrapper">
+    <!-- preloader start -->
+    <div class="preloader js-preloader">
+        <div class="preloader__bg"></div>
+    </div>
+    <!-- preloader end -->
+    <main class="main-content">
+        <header data-anim="fade" data-add-bg="bg-dark-1" class="header -type-1 js-header">
+
+
+            <div class="header__container">
+                <div class="row justify-between items-center">
+
+                    <div class="col-auto">
+                        <div class="header-left">
+
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <div class="nav-item align-items-center">
+
+                                    <a class="nav-link d-inline-block" href="?&ui-culture=en-US">English</a>
+                                </div>
+                                <a href="/identity/account/logout" class="button -sm -white text-dark-1 ml-30">الخروج</a>
+
+                            }
+                            else
+                            {
+                                <div class="nav-item align-items-center">
+
+                                    <a class="nav-link d-inline-block" href="?&ui-culture=en-US">English</a>
+                                </div>
+                                <div class="header-right__buttons d-flex items-center ml-30 md:d-none">
+                                    <a href="/identity/account/login" class="button -underline text-white">الدخول</a>
+                                    <a href="/identity/account/register" class="button -sm -white text-dark-1 ml-30">تسجل ك مستخدم جديد</a>
+                                </div>
+
+                            }
+
+
+
+
+                        </div>
+                    </div>
+
+
+                    <div class="header-menu js-mobile-menu-toggle   ">
+                        <div class="header-menu__content">
+                            <div class="mobile-bg "></div>
+
+                            <div class="menu js-navList ">
+                                <div class="menu__nav text-white -is-active" style="list-style-type: none;">
+                                    <div class="">
+                                        <a href="/home/contact">تواصل معنا</a>
+                                    </div>
+                                    <div class="">
+                                        <a href="/home/aboutus">عنا</a>
+                                    </div>
+                                    <div class="">
+                                        <a href="/course">الكورسات</a>
+                                    </div>
+                                    <div class="">
+                                        <a href="/">الرئيسية</a>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                            <div class="mobile-footer px-20 py-20 border-top-light js-mobile-footer">
+                                <div class="mobile-footer__number">
+                                    <div class="text-17 fw-500 text-dark-1">Call us</div>
+                                    <div class="text-17 fw-500 text-purple-1">800 388 80 90</div>
+                                </div>
+
+                                <div class="lh-2 mt-10">
+                                    <div>329 Queensberry Street,<br> North Melbourne VIC 3051, Australia.</div>
+                                    <div>hi@educrat.com</div>
+                                </div>
+
+                                <div class="mobile-socials mt-10">
+
+                                    <a href="#" class="d-flex items-center justify-center rounded-full size-40">
+                                        <i class="fa fa-facebook"></i>
+                                    </a>
+
+                                    <a href="#" class="d-flex items-center justify-center rounded-full size-40">
+                                        <i class="fa fa-twitter"></i>
+                                    </a>
+
+                                    <a href="#" class="d-flex items-center justify-center rounded-full size-40">
+                                        <i class="fa fa-instagram"></i>
+                                    </a>
+
+                                    <a href="#" class="d-flex items-center justify-center rounded-full size-40">
+                                        <i class="fa fa-linkedin"></i>
+                                    </a>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="header-menu-close" data-el-toggle=".js-mobile-menu-toggle">
+                            <div class="size-40 d-flex items-center justify-center rounded-full bg-white">
+                                <div class="icon-close text-dark-1 text-16"></div>
+                            </div>
+                        </div>
+
+                        <div class="header-menu-bg"></div>
+                    </div>
+
+
+                    <div class="col-auto">
+                        <div class="header-right d-flex items-center">
+                            <div class="header-right__icons text-white d-flex items-center">
+                                <div class="header__logo ">
+                                    <a data-barba href="/">
+                                        <img src="/img/general/logo.svg" alt="logo">
+                                    </a>
+                                   
+
+
+                                </div>
+
+                               
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <div dir="rtl">
+            @RenderBody()
+        </div>
+
+        <footer class="footer -type-1 bg-dark-1 -green-links">
+            <div class="container">
+                <div class="footer-header">
+                    <div class="row y-gap-20 justify-between items-center">
+                        <div class="col-auto">
+                            <div class="footer-header-socials">
+                                <div class="footer-header-socials__list">
+                                    <a href="#"><i class="icon-linkedin"></i></a>
+                                    <a href="#"><i class="icon-instagram"></i></a>
+                                    <a href="#"><i class="icon-twitter"></i></a>
+                                    <a href="#"><i class="icon-facebook"></i></a>
+                                </div>
+                                <div class="footer-header-socials__title text-white">تابعنا على مواقع التواصل الاجتماعي</div>
+
+
+                            </div>
+                        </div>
+                        <div class="col-auto">                    
+                            <div class="footer-header__logo">
+                                <img src="/img/general/logo.svg" alt="logo">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="footer-columns">
+                    <div class="row y-gap-30">
+                        <div class="col-xl-2 col-lg-4 col-md-6">
+                            <div class="text-17 fw-500 text-white uppercase mb-25">GET IN TOUCH</div>
+                            <div class="footer-columns-form">
+                                <div>We don’t send spam so don’t worry.</div>
+                                <form action="post">
+                                    <div class="form-group">
+                                        <input type="text" placeholder="Email...">
+                                        <button type="submit">Submit</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-4 col-lg-8">
+                            <div class="text-17 fw-500 text-white uppercase mb-25">CATEGORIES</div>
+                            <div class="row justify-between y-gap-20">
+                                <div class="col-md-6">
+                                    <div class="d-flex y-gap-10 flex-column">
+                                        <a href="courses-single-1.html">Development</a>
+                                        <a href="courses-single-2.html">Business</a>
+                                        <a href="courses-single-3.html">Finance & Accounting</a>
+                                        <a href="courses-single-4.html">IT & Software</a>
+                                        <a href="courses-single-5.html">Office Productivity</a>
+                                        <a href="courses-single-6.html">Design</a>
+                                        <a href="courses-single-1.html">Marketing</a>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="d-flex y-gap-10 flex-column">
+                                        <a href="courses-single-1.html">Lifiestyle</a>
+                                        <a href="courses-single-2.html">Photography & Video</a>
+                                        <a href="courses-single-3.html">Health & Fitness</a>
+                                        <a href="courses-single-4.html">Music</a>
+                                        <a href="courses-single-5.html">UX Design</a>
+                                        <a href="courses-single-6.html">Seo</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-2 offset-xl-1 col-lg-4 col-md-6">
+                            <div class="text-17 fw-500 text-white uppercase mb-25">SUPPORT</div>
+                            <div class="d-flex y-gap-10 flex-column">
+                                <a href="terms.html">Documentation</a>
+                                <a href="help-center.html">FAQS</a>
+                                <a href="dashboard.html">Dashboard</a>
+                                <a href="contact-1.html">Contact</a>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-3 col-lg-4 col-md-6">
+                            <div class="text-17 fw-500 text-white uppercase mb-25">ABOUT</div>
+                            <div class="d-flex y-gap-10 flex-column">
+                                <a href="about-1.html">About Us</a>
+                                <a href="blog-list-1.html">Learner Stories</a>
+                                <a href="instructor-become.html">Careers</a>
+                                <a href="blog-list-1.html">Press</a>
+                                <a href="#">Leadership</a>
+                                <a href="contact-1.html">Contact Us</a>
+                            </div>
+                           
+                        </div>
+                    </div>
+                </div>
+
+                <div class="py-30 border-top-light-15">
+                    <div class="row justify-between items-center y-gap-20">
+                        <div class="col-auto">
+                            <div class="d-flex items-center h-100 text-white">
+                                © 2022 Educrat. All Right Reserved.
+                            </div>
+                        </div>
+
+                        <div class="col-auto">
+                            <div class="d-flex x-gap-20 y-gap-20 items-center flex-wrap">
+                                <div>
+                                    <div class="d-flex x-gap-15 text-white">
+                                        <a href="help-center.html">Help</a>
+                                        <a href="terms.html">Privacy Policy</a>
+                                        <a href="terms.html">Cookie Notice</a>
+                                        <a href="terms.html">Security</a>
+                                        <a href="terms.html">Terms of Use</a>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <a href="#" class="button px-30 h-50 -dark-6 rounded-200 text-white">
+                                        <i class="icon-worldwide text-20 mr-15"></i><span class="text-15">English</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <script src="https://cdn.tiny.cloud/1/wnz7131xn0vec3u4r9xd1ulg2yldexr3xbwof179ywdyrt6g/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+    <script src="/js/vendors.js"></script>
+    <script src="/js/main.js"></script>
+
+    <script>
+        tinymce.init({
+            selector: 'textarea',
+            plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
+            toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat | numlist bullist',
+            lists_indent_on_tab: false
+
+        });
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

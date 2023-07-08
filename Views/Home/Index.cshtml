@@ -1,0 +1,1190 @@
+﻿@using System.Text.RegularExpressions;
+@model LMS.Models.ViewModel.HomeViewModel
+@using Microsoft.AspNetCore.Mvc.Localization;
+
+@inject IViewLocalizer Localizer
+@{
+    // Get the current culture
+    var culture = System.Threading.Thread.CurrentThread.CurrentCulture.Name;
+
+    // Check if the culture is "ar_SA"
+    if (culture == "ar-SA")
+    {
+        Layout = "_LayoutArabic";
+    }
+    else
+    {
+        // Set a default layout for other cultures
+        Layout = "_Layout";
+    }
+}
+
+<div class="content-wrapper  js-content-wrapper">
+
+
+    <section data-anim-wrap class="masthead -type-4">
+        <div class="container">
+            <div class="row y-gap-50 justify-center items-center">
+                <div class="col-xl-5 col-lg-6">
+                    <div class="masthead__content">
+                        <h1 data-anim-child="slide-up delay-3" class="masthead__title">
+                            @Localizer["Master the Skills to"] <br>
+                            @Localizer["Drive your"] <span class="text-purple-1 ">@Localizer["Career"]</span>
+                        </h1>
+                        <p data-anim-child="slide-up delay-4" class="masthead__text pt-15">
+                            @Localizer["Free online courses from the world’s leading experts"].<br class="md:d-none">
+                            @Localizer["Join"] @Model.enrollments.Count()+ @Localizer["learners today"]
+                        </p>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+
+
+                            <div data-anim-child="slide-up delay-5" class="masthead__button row x-gap-20 y-gap-20 pt-30">
+
+                                <div class="col-auto"><a class="button -md -purple-1 -rounded text-white">@Localizer["Welcome"]</a></div>
+                                <div class="col-auto"><a href="/course" class="button -md -outline-dark-1 -rounded text-dark-1">@Localizer["Find Courses"]</a></div>
+                            </div>
+                        }
+
+                        else
+                        {
+                            <div data-anim-child="slide-up delay-5" class="masthead__button row x-gap-20 y-gap-20 pt-30">
+                                <div class="col-auto"><a href="/identity/account/register" class="button -md -purple-1 -rounded text-white">@Localizer["Join For Free"]</a></div>
+                                <div class="col-auto"><a href="/course" class="button -md -outline-dark-1 -rounded text-dark-1">@Localizer["Find Courses"]</a></div>
+                            </div>
+
+                        }
+                    </div>
+                </div>
+
+                <div class="col-xl-6 col-lg-6">
+                    <div data-anim-child="slide-up delay-6" class="masthead__image">
+                        <img src="img/home-5/masthead/bg.svg" alt="image" style="width: 100%; height: auto;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="layout-pt-sm layout-pb-sm border-bottom-light">
+        <div class="container">
+            <div class="row y-gap-30 justify-between">
+                <div class="col-xl-3 col-md-6">
+                    <div class="d-flex items-center">
+                        <div class="mr-3 mr-md-4">
+                            <img src="img/home-3/masthead/icons/1.svg" alt="icon">
+                        </div>
+                        <div>
+                            <h4 class="text-20 fw-500">@Model.Courses.Count() @Localizer["Online courses"]</h4>
+                            <div class="text-dark-1">@Localizer["Explore a variety of fresh topics"]</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-md-6">
+                    <div class="d-flex items-center">
+                        <div class="mr-3 mr-md-4">
+                            <img src="img/home-3/masthead/icons/2.svg" alt="icon">
+                        </div>
+                        <div>
+                            <h4 class="text-20 fw-500"> @Localizer["Expert instruction"]</h4>
+                            <div class="text-dark-1"> @Localizer["Find the right instructor for you"]</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-md-6">
+                    <div class="d-flex items-center">
+                        <div class="mr-3 mr-md-4">
+                            <img src="img/home-3/masthead/icons/3.svg" alt="icon">
+                        </div>
+                        <div>
+                            <h4 class="text-20 fw-500">@Localizer["Lifetime access"]</h4>
+                            <div class="text-dark-1">@Localizer["Learn on your schedule"]</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="layout-pt-lg layout-pb-lg">
+        <div class="container">
+            <div class="row y-gap-20 justify-between items-end">
+                <div class="col-lg-6">
+
+                    <div class="sectionTitle">
+                        <h2 class="sectionTitle__title" style="display: flex; align-items: center;">
+                            @Localizer["Top Categories"]
+                            @if (User.Identity.IsAuthenticated && User.IsInRole("Admin") || User.IsInRole("Instructor"))
+                            {
+                                <a href="/coursecategory/create" class="button -sm -purple-3 ml-10">
+                                    Add
+                                </a>
+                            }
+                          
+
+                        </h2>
+
+                        <p class="sectionTitle__text">Lorem ipsum dolor sit amet, consectetur.</p>
+
+
+                    </div>
+
+
+
+
+                </div>
+
+               @* <div class="col-auto">
+                    @if (culture == "ar-SA")
+                    {
+                        <a href="/course" class="button -icon -purple-3 text-purple-1">
+                            @Localizer["All Categories"]
+                            <i class="icon-arrow-top-right text-13 mr-10"></i>
+                        </a>
+                    }
+
+                    else
+                    {
+                          <a href="/course" class="button -icon -purple-3 text-purple-1">
+                            @Localizer["All Categories"]
+                            <i class="icon-arrow-top-right text-13 ml-10"></i>
+                        </a>
+                    }
+
+                </div>
+                *@
+            </div>
+
+            <div class="row y-gap-50 pt-60 lg:pt-50">
+
+                @foreach (var category in Model.CourseCategories)
+                {
+                    <div class="col-xl-3 col-lg-4 col-sm-6">
+                        <div class="categoryCard -type-2">
+                            @if (culture == "ar-SA")
+                            {
+                                <div class="categoryCard__image ml-20">
+                                    <img src="@category.Image" alt="image" style="width:70px; height:70px; border-radius:50%;">
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="categoryCard__image mr-20">
+                                    <img src="@category.Image" alt="image" style="width:70px; height:70px; border-radius:50%;">
+                                </div>
+                            }
+
+
+
+                            <div class="categoryCard__content">
+                                <h4 class="categoryCard__title text-17 fw-500">
+                                    @if (culture == "ar-SA")
+                                    {
+                                        @category.ArName
+                                    }
+                                    else
+                                    {
+                                        @category.EnName
+                                    }
+                                </h4>
+
+                                <div class="categoryCard__text text-13 lh-1 mt-5 ">@Model.CourseCountPerCategory[category.Id]+ @Localizer["Courses"] </div>
+                            </div>
+                            @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                            {
+                                <div >
+
+                                    <form asp-controller="CourseCategory" asp-action="Delete" asp-route-id="@category.Id" method="post" onsubmit="return confirm('Are you sure you want to delete this category?');">
+                                        <button type="submit" > <i class="fa-solid fa-trash"></i></button>
+                                    </form>
+                                    <a asp-controller="CourseCategory"  asp-action="Edit" asp-route-id="@category.Id"><i class="fa-solid fa-pen-to-square"></i></a>
+
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+
+
+
+
+
+            </div>
+        </div>
+    </section>
+
+    <section class="layout-pt-lg layout-pb-lg section-bg">
+        <div class="section-bg__item bg-light-6"></div>
+
+        <div data-anim-wrap class="container">
+            <div class="row y-gap-15 justify-between items-center">
+                <div class="col-lg-6">
+
+                    <div class="sectionTitle ">
+
+                        <h2 class="sectionTitle__title ">@Localizer["Top courses"]</h2>
+
+                        <p class="sectionTitle__text ">
+                            <span class="m-1">@Model.Courses.Count(course => course.IsFeatured)</span>
+                            @Localizer["unique online course list designs"]
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <div class="col-lg-auto">
+                    <div class="d-inline-block">
+                        @if (culture == "ar-SA")
+                        {
+                            <a href="/course" class="button -icon -light-11 text-purple-1">
+                                @Localizer["All Courses"]
+                                <i class="icon-arrow-top-right text-13 mr-10"></i>
+                            </a>
+                        }
+                        else
+                        {
+                            <a href="/course" class="button -icon -light-11 text-purple-1">
+                                @Localizer["All Courses"]
+                                <i class="icon-arrow-top-right text-13 ml-10"></i>
+                            </a>
+                        }
+
+
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="tabs__content pt-60 lg:pt-50 js-tabs-content">
+
+                <div class="tabs__pane -tab-item-1 is-active">
+                    <div class="overflow-hidden js-section-slider" data-gap="30" data-slider-cols="xl-4 lg-3 md-2 sm-2">
+                        <div class="swiper-wrapper">
+                            @foreach (var course in Model.Courses)
+                            {
+                                if (course.IsFeatured)
+                                {
+                                    <div class="swiper-slide">
+                                        <div data-anim-child="slide-up delay-1">
+
+                                            <a href="/course/details/@course.Id" class="coursesCard -type-1 ">
+                                                <div class="relative">
+                                                    <div class="coursesCard__image overflow-hidden rounded-8">
+                                                        @if (!string.IsNullOrEmpty(course.CourseIntroductionVideo))
+                                                        {
+                                                            var match = Regex.Match(course.CourseIntroductionVideo, "(?<=v=|youtu.be/|/vi/|/embed/|/v/|/e/|/u/\\w+/|/embed/|/v/|/a/|/p/|/br/|//www.youtube.com/embed/|//www.youtube.com/watch?v=|//youtu.be/|//www.youtube.com/v/|//embed/|//u//\\w+//|//embed/|//v//|//a//|//p//|//br//|//www.youtube.com/embed/|//www.youtube.com/watch?v=|//youtu.be/|//www.youtube.com/v/|//embed/|//u//\\w+//|//embed/|//v//|//a//|//p//|//br//|//www.youtube.com/embed/|//www.youtube.com/watch?v=|//youtu.be/|//www.youtube.com/v/|//embed/|//u//\\w+//|//embed/|//v//|//a//|//p//|//br//|//www.youtube.com/embed/|//www.youtube.com/watch?v=|//youtu.be/|//www.youtube.com/v/|//embed/|//u//\\w+//|//embed/|//v//|//a//|//p//|//br//)([\\w-]+)(.*)");
+                                                            var videoId = match.Success ? match.Groups[1].Value : "";
+                                                            var embeddedUrl = "https://www.youtube.com/embed/" + videoId;
+                                                            <iframe class="w-1/1 rounded-8" src="@embeddedUrl" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                                        }
+                                                        <div class="coursesCard__image_overlay rounded-8"></div>
+                                                    </div>
+                                                    <div class="d-flex justify-between py-10 px-10 absolute-full-center z-3">
+                                                    </div>
+                                                </div>
+                                                @{
+                                                    var courseRatings = Model.CourseRatings.Where(rating => rating.CourseId == course.Id).ToList();
+                                                    double averageScore = CommonUsed.CalculateAverageScore(courseRatings);
+                                                    int ratingsCount = courseRatings.Count;
+                                                    int totalDurations = Model.CourseChapterContents
+                                                    .Where(content => content.courseChapter.courseId == course.Id) // Filter contents by CourseId
+                                                    .Sum(content => content.Duration); // Sum the durations
+                                                    var coursecategory = Model.CourseCategories.FirstOrDefault(category => category.Id == course.CourseCategoryId);
+
+                                                }
+                                                @if (culture == "ar-SA")
+                                                {
+
+                                                    <div class="coursesCard__content pl-20 sm:pl-10 pr-10">
+                                                        <div class="d-flex items-center">
+                                                            <div class="d-flex x-gap-5 items-center">
+
+
+                                                                @if (averageScore > 0)
+                                                                {
+                                                                    for (int i = 0; i < (int)averageScore; i++)
+                                                                    {
+                                                                        <div class="icon-star text-9 text-yellow-1"></div>
+                                                                    }
+                                                                }
+
+
+                                                            </div>
+                                                            <div class="text-14 lh-1 text-yellow-1 mr-10">
+                                                                @(averageScore > 0 ? averageScore.ToString() : "غير مصنف")
+                                                            </div>
+
+                                                            @if (ratingsCount > 0)
+                                                            {
+                                                                <div class="text-13 lh-1 ml-10 me-3">(@ratingsCount)</div>
+                                                            }
+
+
+                                                        </div>
+
+                                                        <div class="text-17 lh-13 fw-500 text-dark-1 mt-10">@course.ArTitle</div>
+
+                                                        @if (course.EnTitle.Length < 35)
+                                                        {
+                                                            <br>
+                                                        }
+                                                        <div class="d-flex x-gap-15 items-center py-10">
+
+                                                            <div class="d-flex items-center">
+                                                                <div class="text-14 lh-1">@coursecategory.ArName</div>
+
+                                                                <div class="mr-8">
+                                                                    <i class="fas fa-book mt-1"></i>
+                                                                </div>
+                                                            </div>
+
+                                                            <div style="display: flex; align-items: center;">
+                                                                <div style="flex: 0 0 auto; vertical-align: top;" class="text-14 lh-1 text-light-1">@Model.CourseChapterContents.Where(c => c.courseChapter.courseId == course.Id).Count() دروس</div>
+
+                                                                <div style="margin-right: 10px;">
+                                                                    <img src="img/coursesCards/icons/1.svg" alt="icon">
+                                                                </div>
+                                                            </div>
+
+
+                                                            <div class="d-flex items-center">
+                                                                <div style="flex: 0 0 auto; vertical-align: top;" class="text-14 lh-1 text-light-1">@totalDurations دقيقة</div>
+
+                                                                <div style="margin-right: 10px;">
+                                                                    <img src="img/coursesCards/icons/2.svg" alt="icon">
+                                                                </div>
+                                                            </div>
+
+
+                                                            <div class="d-flex items-center">
+                                                                <div class="text-14 lh-1 text-light-1">@course.Level</div>
+
+                                                                <div class="mr-10">
+                                                                    <img src="img/coursesCards/icons/3.svg" alt="icon">
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+
+                                                        <div class="d-flex justify-between items-center pt-10 border-top-light">
+                                                            <div class="d-flex items-center">
+                                                                <img src="img/general/avatar-1.png" alt="image">
+                                                                <div class="text-light-1 ml-10">دكتور سيف</div>
+                                                            </div>
+
+                                                            <div class="d-flex items-center">
+                                                                @if (course.Fee == 0)
+                                                                {
+                                                                    <div class="text-18 fw-500 text-dark-1">مجانا</div>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <div class="text-18 fw-500 text-dark-1">$@course.Fee</div>
+                                                                }
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+
+                                                }
+                                                else
+                                                {
+                                                    <div class="h-100 pt-15">
+
+                                                        <div class="d-flex items-center">
+                                                            <div class="text-14 lh-1 text-yellow-1 mr-10">
+                                                                @(averageScore > 0 ? averageScore.ToString() : "Not rated")
+                                                            </div>
+
+                                                            <div class="d-flex x-gap-5 items-center">
+
+
+                                                                @if (averageScore > 0)
+                                                                {
+                                                                    for (int i = 0; i < (int)averageScore; i++)
+                                                                    {
+                                                                        <div class="icon-star text-9 text-yellow-1"></div>
+                                                                    }
+                                                                }
+
+
+                                                            </div>
+                                                            @if (ratingsCount > 0)
+                                                            {
+                                                                <div class="text-13 lh-1 ml-10">(@ratingsCount)</div>
+                                                            }
+                                                        </div>
+
+
+                                                        <div class="text-17 lh-15 fw-500 text-dark-1 mt-10">
+
+                                                            @course.EnTitle
+
+
+
+                                                        </div>
+                                                        @if (course.EnTitle.Length < 35)
+                                                        {
+                                                            <br>
+                                                        }
+
+                                                        <div class="d-flex x-gap-10 items-center pt-10">
+                                                            <div class="d-flex items-center">
+                                                                <div class="mr-8">
+                                                                    <i class="fas fa-book mt-1"></i>
+                                                                </div>
+                                                                <div class="text-14 lh-1">@coursecategory.EnName</div>
+                                                            </div>
+
+                                                            <div class="d-flex items-center">
+                                                                <div class="mr-8">
+                                                                    <img src="img/coursesCards/icons/1.svg" alt="icon">
+                                                                </div>
+                                                                <div class="text-14 lh-1">@Model.CourseChapterContents.Where(c => c.courseChapter.courseId == course.Id).Count() lesson</div>
+                                                            </div>
+
+
+                                                            <div class="d-flex items-center">
+                                                                <div class="mr-8">
+                                                                    <img src="img/coursesCards/icons/2.svg" alt="icon">
+                                                                </div>
+                                                                <div class="text-14 lh-1">@(totalDurations/60) Hour</div>
+                                                            </div>
+
+                                                            <div class="d-flex items-center">
+                                                                <div class="mr-8">
+                                                                    <img src="img/coursesCards/icons/3.svg" alt="icon">
+                                                                </div>
+                                                                <div class="text-14 lh-1">@course.Level</div>
+                                                            </div>
+
+                                                        </div>
+
+                                                        <div class="coursesCard-footer">
+                                                            <div class="coursesCard-footer__author">
+                                                                <img src="img/general/avatar-1.png" alt="image">
+                                                                <div>@Model?.Coursesingle.ApplicationUser.UserName</div>
+                                                            </div>
+
+                                                            <div class="coursesCard-footer__">
+                                                                <div>
+                                                                    @if (course.Fee == 0)
+                                                                    {
+                                                                        @:Free
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        @string.Format("${0:N2}", course.Fee)
+                                                                    }
+                                                                </div>
+
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            </a>
+
+
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                    <button class="section-slider-nav -prev -dark-bg-dark-2 -outline-dark-1 -absolute-out size-50 rounded-full xl:d-none js-courses-prev">
+                        <i class="icon icon-arrow-left text-24"></i>
+                    </button>
+
+                    <button class="section-slider-nav -next -dark-bg-dark-2 -outline-dark-1 -absolute-out size-50 rounded-full xl:d-none js-courses-next">
+                        <i class="icon icon-arrow-right text-24"></i>
+                    </button>
+                </div>
+
+            </div>
+
+
+        </div>
+    </section>
+    <script>
+        let swiper = new Swiper('.overflow-hidden.js-section-slider', {
+            navigation: {
+                nextEl: '.js-courses-next',
+                prevEl: '.js-courses-prev',
+            },
+        });
+
+    </script>
+
+
+    <section class="layout-pt-lg layout-pb-lg">
+        <div class="container">
+            <div class="row y-gap-20 justify-center text-center">
+                <div class="col-auto">
+
+                    <div class="sectionTitle ">
+
+                        <h2 class="sectionTitle__title ">@Localizer["How it works?"]</h2>
+
+                        <p class="sectionTitle__text ">@Model.Courses.Count() @Localizer["unique online course list designs"]</p>
+
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="row y-gap-30 justify-between pt-60 lg:pt-40">
+
+                <div class="col-xl-2 col-lg-3 col-md-6">
+                    <div class="d-flex flex-column items-center text-center">
+                        <div class="relative size-120 d-flex justify-center items-center rounded-full bg-light-4">
+                            <img src="img/home-3/works/1.svg" alt="image">
+                            <div class="side-badge">
+                                <div class="size-35 d-flex justify-center items-center rounded-full bg-dark-1 -dark-bg-purple-1">
+                                    <span class="text-14 fw-500 text-white">01</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-17 fw-500 text-dark-1 mt-30">@Localizer["Browse courses from our expert contributors."] </div>
+                    </div>
+                </div>
+
+
+                <div class="col-auto xl:d-none">
+                    <div class="pt-30">
+                        <img src="img/misc/lines/1.svg" alt="icon">
+                    </div>
+                </div>
+
+
+                <div class="col-xl-2 col-lg-3 col-md-6">
+                    <div class="d-flex flex-column items-center text-center">
+                        <div class="relative size-120 d-flex justify-center items-center rounded-full bg-light-4">
+                            <img src="img/home-3/works/2.svg" alt="image">
+                            <div class="side-badge">
+                                <div class="size-35 d-flex justify-center items-center rounded-full bg-dark-1 -dark-bg-purple-1">
+                                    <span class="text-14 fw-500 text-white">02</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-17 fw-500 text-dark-1 mt-30">@Localizer["Purchase quickly and securely."]</div>
+                    </div>
+                </div>
+
+
+                <div class="col-auto xl:d-none">
+                    <div class="pt-30">
+                        <img src="img/misc/lines/2.svg" alt="icon">
+                    </div>
+                </div>
+
+
+                <div class="col-xl-2 col-lg-3 col-md-6">
+                    <div class="d-flex flex-column items-center text-center">
+                        <div class="relative size-120 d-flex justify-center items-center rounded-full bg-light-4">
+                            <img src="img/home-3/works/3.svg" alt="image">
+                            <div class="side-badge">
+                                <div class="size-35 d-flex justify-center items-center rounded-full bg-dark-1 -dark-bg-purple-1">
+                                    <span class="text-14 fw-500 text-white">03</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-17 fw-500 text-dark-1 mt-30">@Localizer["That’s it! Start learning right away."] </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </section>
+
+    <div class="line px-50">
+        <div class="line__item bg-light-5"></div>
+    </div>
+
+
+
+    <section class="layout-pt-lg layout-pb-lg section-bg">
+        <div class="section-bg__item bg-light-6"></div>
+
+        <div class="container">
+            <div class="row y-gap-20 justify-center text-center">
+                <div class="col-auto">
+
+                    <div class="sectionTitle ">
+
+                        <h2 class="sectionTitle__title ">Testimonials</h2>
+
+                        <p class="sectionTitle__text ">@Model.Courses.Count() @Localizer["unique online course list designs"]</p>
+
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="row justify-center pt-60">
+                <div class="col-xl-6 col-lg-8 col-md-10">
+                    <div class="overflow-hidden js-testimonials-slider">
+                        <div class="swiper-wrapper">
+
+                            <div class="swiper-slide h-100">
+                                <div data-anim="slide-up" class="testimonials -type-2 text-center">
+                                    <div class="testimonials__icon">
+                                        <img src="img/misc/quote.svg" alt="quote">
+                                    </div>
+                                    <div class="testimonials__text md:text-20 fw-500 text-dark-1">It is no exaggeration to say this Educrat experience was transformative–both professionally and personally. This workshop will long remain a high point of my life.</div>
+                                    <div class="testimonials__author">
+                                        <h5 class="text-17 lh-15 fw-500">Adnan mowakeh</h5>
+                                        <div class="mt-5">Product Manager, Apple Inc</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="swiper-slide h-100">
+                                <div data-anim="slide-up" class="testimonials -type-2 text-center">
+                                    <div class="testimonials__icon">
+                                        <img src="img/misc/quote.svg" alt="quote">
+                                    </div>
+                                    <div class="testimonials__text md:text-20 fw-500 text-dark-1">It is no exaggeration to say this Educrat experience was transformative–both professionally and personally. This workshop will long remain a high point of my life.</div>
+                                    <div class="testimonials__author">
+                                        <h5 class="text-17 lh-15 fw-500">Ali Tufan</h5>
+                                        <div class="mt-5">Product Manager, Apple Inc</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="swiper-slide h-100">
+                                <div data-anim="slide-up" class="testimonials -type-2 text-center">
+                                    <div class="testimonials__icon">
+                                        <img src="img/misc/quote.svg" alt="quote">
+                                    </div>
+                                    <div class="testimonials__text md:text-20 fw-500 text-dark-1">It is no exaggeration to say this Educrat experience was transformative–both professionally and personally. This workshop will long remain a high point of my life.</div>
+                                    <div class="testimonials__author">
+                                        <h5 class="text-17 lh-15 fw-500">Ali Tufan</h5>
+                                        <div class="mt-5">Product Manager, Apple Inc</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="swiper-slide h-100">
+                                <div data-anim="slide-up" class="testimonials -type-2 text-center">
+                                    <div class="testimonials__icon">
+                                        <img src="img/misc/quote.svg" alt="quote">
+                                    </div>
+                                    <div class="testimonials__text md:text-20 fw-500 text-dark-1">It is no exaggeration to say this Educrat experience was transformative–both professionally and personally. This workshop will long remain a high point of my life.</div>
+                                    <div class="testimonials__author">
+                                        <h5 class="text-17 lh-15 fw-500">Ali Tufan</h5>
+                                        <div class="mt-5">Product Manager, Apple Inc</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="swiper-slide h-100">
+                                <div data-anim="slide-up" class="testimonials -type-2 text-center">
+                                    <div class="testimonials__icon">
+                                        <img src="img/misc/quote.svg" alt="quote">
+                                    </div>
+                                    <div class="testimonials__text md:text-20 fw-500 text-dark-1">It is no exaggeration to say this Educrat experience was transformative–both professionally and personally. This workshop will long remain a high point of my life.</div>
+                                    <div class="testimonials__author">
+                                        <h5 class="text-17 lh-15 fw-500">Ali Tufan</h5>
+                                        <div class="mt-5">Product Manager, Apple Inc</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="pt-60 lg:pt-40">
+                            <div class="pagination -avatars row x-gap-40 y-gap-20 justify-center js-testimonials-pagination">
+
+                                <div class="col-auto">
+                                    <div class="pagination__item is-active">
+                                        <img src="img/home-3/testimonials/1.png" alt="image">
+                                    </div>
+                                </div>
+
+                                <div class="col-auto">
+                                    <div class="pagination__item ">
+                                        <img src="img/home-3/testimonials/2.png" alt="image">
+                                    </div>
+                                </div>
+
+                                <div class="col-auto">
+                                    <div class="pagination__item ">
+                                        <img src="img/home-3/testimonials/3.png" alt="image">
+                                    </div>
+                                </div>
+
+                                <div class="col-auto">
+                                    <div class="pagination__item ">
+                                        <img src="img/home-3/testimonials/4.png" alt="image">
+                                    </div>
+                                </div>
+
+                                <div class="col-auto">
+                                    <div class="pagination__item ">
+                                        <img src="img/home-3/testimonials/5.png" alt="image">
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="layout-pt-lg layout-pb-lg">
+        <div data-anim-wrap class="container">
+            <div class="row y-gap-15 justify-between items-center">
+                <div class="col-lg-6">
+
+                    <div class="sectionTitle ">
+                        <h2 class="sectionTitle__title" style="display: flex; align-items: center;">
+                            @Localizer["Recent Courses"]
+                            @if (User.Identity.IsAuthenticated  )
+                            {
+                                <a href="/Course/create" class="button -sm -purple-3  ml-10">
+                                    Add
+                                </a>
+                            }
+                          
+
+                        </h2>
+                        <p class="sectionTitle__text ">@Model.Courses.Count()+ @Localizer["unique online course list designs"]</p>
+
+                    </div>
+
+                </div>
+
+                <div class="col-lg-auto">
+                    <div class="d-inline-block">
+
+                        <div class="dropdown js-dropdown js-category-active">
+
+
+                            <div class="toggle-element -dropdown -dark-bg-dark-2 -dark-border-white-10 js-click-dropdown js-category-toggle">
+                                <div class="text-14 y-gap-15 js-dropdown-list">
+
+                                    <div><a href="#" class="d-block js-dropdown-link">Great</a></div>
+
+                                    <div><a href="#" class="d-block js-dropdown-link">Good</a></div>
+
+                                    <div><a href="#" class="d-block js-dropdown-link">Medium</a></div>
+
+                                    <div><a href="#" class="d-block js-dropdown-link">Low</a></div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="row y-gap-30 justify-center pt-50">
+                @foreach (var course in Model.Courses)
+                {
+                    <div class="col-lg-3 col-md-6">
+                        <div data-anim-child="slide-up delay-1">
+
+                            <a href="/course/details/@course.Id" class="coursesCard -type-1 border-light rounded-8">
+                                <div class="relative">
+                                    <div class="coursesCard__image overflow-hidden rounded-top-8">
+                                        @{
+                                            string embeddedUrl = null;
+                                            if (!string.IsNullOrEmpty(course.CourseIntroductionVideo))
+                                            {
+                                                var match = Regex.Match(course.CourseIntroductionVideo, "(?<=v=|youtu.be/|/vi/|/embed/|/v/|/e/|/u/\\w+/|/embed/|/v/|/a/|/p/|/br/|//www.youtube.com/embed/|//www.youtube.com/watch?v=|//youtu.be/|//www.youtube.com/v/|//embed/|//u//\\w+//|//embed/|//v//|//a//|//p//|//br//|//www.youtube.com/embed/|//www.youtube.com/watch?v=|//youtu.be/|//www.youtube.com/v/|//embed/|//u//\\w+//|//embed/|//v//|//a//|//p//|//br//|//www.youtube.com/embed/|//www.youtube.com/watch?v=|//youtu.be/|//www.youtube.com/v/|//embed/|//u//\\w+//|//embed/|//v//|//a//|//p//|//br//|//www.youtube.com/embed/|//www.youtube.com/watch?v=|//youtu.be/|//www.youtube.com/v/|//embed/|//u//\\w+//|//embed/|//v//|//a//|//p//|//br//)([\\w-]+)(.*)");
+                                                var videoId = match.Success ? match.Groups[1].Value : "";
+                                                embeddedUrl = "https://www.youtube.com/embed/" + videoId;
+                                            }
+                                        }
+                                        @if (!string.IsNullOrEmpty(embeddedUrl))
+                                        {
+                                            <iframe class="w-1/1 rounded-8" src="@embeddedUrl" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                        }
+                                        <div class="coursesCard__image_overlay rounded-top-8"></div>
+                                    </div>
+
+                                    <div class="d-flex justify-between py-10 px-10 absolute-full-center z-3">
+                                    </div>
+                                </div>
+                                @{
+                                    var courseRatings = Model.CourseRatings.Where(rating => rating.CourseId == course.Id).ToList();
+                                    double averageScore = CommonUsed.CalculateAverageScore(courseRatings);
+                                    int ratingsCount = courseRatings.Count;
+                                    int totalDurations = Model.CourseChapterContents
+                                    .Where(content => content.courseChapter.courseId == course.Id) // Filter contents by CourseId
+                                    .Sum(content => content.Duration); // Sum the durations
+                                    var coursecategory = Model.CourseCategories.FirstOrDefault(category => category.Id == course.CourseCategoryId);
+
+
+                                }
+                                @if (culture == "ar-SA")
+                                {
+
+                                    <div class="coursesCard__content pl-20 sm:pl-10 pr-10">
+                                        <div class="d-flex items-center">
+                                            <div class="d-flex x-gap-5 items-center">
+
+
+                                                @if (averageScore > 0)
+                                                {
+                                                    for (int i = 0; i < (int)averageScore; i++)
+                                                    {
+                                                        <div class="icon-star text-9 text-yellow-1"></div>
+                                                    }
+                                                }
+
+
+                                            </div>
+                                            <div class="text-14 lh-1 text-yellow-1 mr-10">
+                                                @(averageScore > 0 ? averageScore.ToString() : "غير مصنف")
+                                            </div>
+
+                                            @if (ratingsCount > 0)
+                                            {
+                                                <div class="text-13 lh-1 ml-10 me-3">(@ratingsCount)</div>
+                                            }
+
+
+                                        </div>
+
+                                        <div class="text-17 lh-13 fw-500 text-dark-1 mt-10">@course.ArTitle</div>
+
+                                      
+                                
+                                        <div class="d-flex x-gap-15 items-center py-10">
+
+                                            <div class="d-flex items-center">
+                                                <div class="text-14 lh-1">@coursecategory.ArName</div>
+
+                                                <div class="mr-8">
+                                                    <i class="fas fa-book mt-1"></i>
+                                                </div>
+                                            </div>
+
+                                            <div style="display: flex; align-items: center;">
+                                                <div style="flex: 0 0 auto; vertical-align: top;" class="text-14 lh-1 text-light-1">@Model.CourseChapterContents.Where(c => c.courseChapter.courseId == course.Id).Count() دروس</div>
+
+                                                <div style="margin-right: 10px;">
+                                                    <img src="img/coursesCards/icons/1.svg" alt="icon">
+                                                </div>
+                                            </div>
+
+
+                                            <div class="d-flex items-center">
+                                                <div style="flex: 0 0 auto; vertical-align: top;" class="text-14 lh-1 text-light-1">@totalDurations دقيقة</div>
+
+                                                <div style="margin-right: 10px;">
+                                                    <img src="img/coursesCards/icons/2.svg" alt="icon">
+                                                </div>
+                                            </div>
+
+                                            <div class="d-flex items-center">
+                                                <div class="text-14 lh-1 text-light-1">@course.Level</div>
+
+                                                <div class="mr-10">
+                                                    <img src="img/coursesCards/icons/3.svg" alt="icon">
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="d-flex justify-between items-center pt-10 border-top-light">
+                                            <div class="d-flex items-center">
+                                                <img src="img/general/avatar-1.png" alt="image">
+                                                <div class="text-light-1 ml-10">دكتور سيف</div>
+                                            </div>
+
+                                            <div class="d-flex items-center">
+                                                @if (course.Fee == 0)
+                                                {
+                                                    <div class="text-18 fw-500 text-dark-1">مجانا</div>
+                                                }
+                                                else
+                                                {
+                                                    <div class="text-18 fw-500 text-dark-1">$@course.Fee</div>
+                                                }
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                }
+                                else
+                                {
+                                    <div class="h-100 pt-15 pb-10 px-20">
+                                        <div class="d-flex items-center">
+                                            <div class="text-14 lh-1 text-yellow-1 mr-10">
+                                                @(averageScore > 0 ? averageScore.ToString() : "Not rated")
+                                            </div>                                        <div class="d-flex x-gap-5 items-center">
+
+                                                @if (averageScore > 0)
+                                                {
+                                                    for (int i = 0; i < (int)averageScore; i++)
+                                                    {
+                                                        <div class="icon-star text-9 text-yellow-1"></div>
+                                                    }
+                                                }
+                                            </div>
+                                            @if (ratingsCount > 0)
+                                            {
+                                                <div class="text-13 lh-1 ml-10">(@ratingsCount)</div>
+                                            }
+                                        </div>
+
+                                        <div class="text-17 lh-15 fw-500 text-dark-1 mt-10">@course.EnTitle</div>
+
+
+                                        <div class="d-flex x-gap-10 items-center pt-10">
+                                            <div class="d-flex items-center">
+                                                <div class="mr-8">
+                                                    <i class="fas fa-book mt-1"></i>
+                                                </div>
+                                                <div class="text-14 lh-1">@coursecategory.EnName</div>
+                                            </div>
+
+                                            <div class="d-flex items-center">
+                                                <div class="mr-8">
+                                                    <img src="img/coursesCards/icons/1.svg" alt="icon">
+                                                </div>
+                                                <div class="text-14 lh-1">@Model.CourseChapterContents.Where(c => c.courseChapter.courseId == course.Id).Count() lesson</div>
+                                            </div>
+
+                                            <div class="d-flex items-center">
+                                                <div class="mr-8">
+                                                    <img src="img/coursesCards/icons/2.svg" alt="icon">
+                                                </div>
+                                                <div class="text-14 lh-1">@(totalDurations/60) Hour</div>
+                                            </div>
+
+                                            <div class="d-flex items-center">
+                                                <div class="mr-8">
+                                                    <img src="img/coursesCards/icons/3.svg" alt="icon">
+                                                </div>
+                                                <div class="text-14 lh-1">@course.Level</div>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="coursesCard-footer">
+                                            <div class="coursesCard-footer__author">
+                                                <img src="img/general/avatar-1.png" alt="image">
+                                                <div>@Model.Coursesingle.ApplicationUser.UserName</div>
+                                            </div>
+
+                                            <div class="coursesCard-footer__">
+                                                <div>
+                                                    @if (course.Fee == 0)
+                                                    {
+                                                        @:Free
+                                                    }
+                                                    else
+                                                    {
+                                                        @string.Format("${0:N2}", course.Fee)
+                                                    }
+                                                </div>
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </a>
+
+                        </div>
+                    </div>
+                }
+
+
+
+                <div class="row justify-center pt-60 lg:pt-40">
+                    <div class="col-auto">
+                        @if (culture == "ar-SA")
+                        {
+                            <a href="/course" class="button -icon -purple-3 text-purple-1">
+جميع الكورسات                                <i class="icon-arrow-top-right text-13 mr-10"></i>
+                            </a>
+                        }
+                        else
+                        {
+                            <a href="/course" class="button -icon -purple-3 text-purple-1">
+                                All Courses
+                                <i class="icon-arrow-top-right text-13 ml-10"></i>
+                            </a>
+                        }
+
+
+                    </div>
+                </div>
+            </div>
+    </section>
+
+    <section class="layout-pt-lg layout-pb-lg section-bg">
+        <div class="section-bg__item bg-light-6"></div>
+
+        <div class="container">
+            <div class="row y-gap-20 justify-center text-center">
+                <div class="col-auto">
+
+                    <div class="sectionTitle ">
+
+                        <h2 class="sectionTitle__title ">School Achievements</h2>
+
+                        <p class="sectionTitle__text ">10,000+ unique online course list designs</p>
+
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="row pt-60">
+
+                <div class="col-lg-3 col-md-6">
+                    <div class="infoCard -type-2 text-center py-40 -infoCard-hover">
+                        <div class="infoCard__image">
+                            <img src="img/home-3/achieve/1.svg" alt="image">
+                        </div>
+                        <h5 class="infoCard__title text-24 lh-1 mt-25">350,000+</h5>
+                        <p class="infoCard__text mt-5">Students worldwide</p>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <div class="infoCard -type-2 text-center py-40 -infoCard-hover">
+                        <div class="infoCard__image">
+                            <img src="img/home-3/achieve/2.svg" alt="image">
+                        </div>
+                        <h5 class="infoCard__title text-24 lh-1 mt-25">496,00+</h5>
+                        <p class="infoCard__text mt-5">Total course views</p>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <div class="infoCard -type-2 text-center py-40 -infoCard-hover">
+                        <div class="infoCard__image">
+                            <img src="img/home-3/achieve/3.svg" alt="image">
+                        </div>
+                        <h5 class="infoCard__title text-24 lh-1 mt-25">19,000+</h5>
+                        <p class="infoCard__text mt-5">Five-star course reviews</p>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <div class="infoCard -type-2 text-center py-40 -infoCard-hover">
+                        <div class="infoCard__image">
+                            <img src="img/home-3/achieve/4.svg" alt="image">
+                        </div>
+                        <h5 class="infoCard__title text-24 lh-1 mt-25">987,000+</h5>
+                        <p class="infoCard__text mt-5">Students community</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section class="layout-pt-lg layout-pb-lg">
+        <div class="container">
+            <div class="row y-gap-20 justify-center text-center">
+                <div class="col-auto">
+
+                    <div class="sectionTitle ">
+
+                        <h2 class="sectionTitle__title ">What will you learn</h2>
+
+                        <p class="sectionTitle__text ">10,000+ unique online course list designs</p>
+
+                    </div>
+
+                </div>
+            </div>
+
+            <div data-anim-wrap class="pt-60 lg:pt-50">
+                <div class="overflow-hidden js-section-slider" data-gap="30" data-loop data-pagination data-slider-cols="xl-6 lg-4 md-3 sm-2">
+                    <div class="swiper-wrapper">
+
+                        <div class="swiper-slide h-100">
+                            <div data-anim-child="slide-left delay-1" class="infoCard -type-1">
+                                <div class="infoCard__image">
+                                    <img src="img/home-3/learn/1.png" alt="image">
+                                </div>
+                                <h5 class="infoCard__title text-17 lh-15 mt-10">Node Js</h5>
+                            </div>
+                        </div>
+
+                        <div class="swiper-slide h-100">
+                            <div data-anim-child="slide-left delay-2" class="infoCard -type-1">
+                                <div class="infoCard__image">
+                                    <img src="img/home-3/learn/2.png" alt="image">
+                                </div>
+                                <h5 class="infoCard__title text-17 lh-15 mt-10">HTML5</h5>
+                            </div>
+                        </div>
+
+                        <div class="swiper-slide h-100">
+                            <div data-anim-child="slide-left delay-3" class="infoCard -type-1">
+                                <div class="infoCard__image">
+                                    <img src="img/home-3/learn/3.png" alt="image">
+                                </div>
+                                <h5 class="infoCard__title text-17 lh-15 mt-10">JQuery</h5>
+                            </div>
+                        </div>
+
+                        <div class="swiper-slide h-100">
+                            <div data-anim-child="slide-left delay-4" class="infoCard -type-1">
+                                <div class="infoCard__image">
+                                    <img src="img/home-3/learn/4.png" alt="image">
+                                </div>
+                                <h5 class="infoCard__title text-17 lh-15 mt-10">CSS</h5>
+                            </div>
+                        </div>
+
+                        <div class="swiper-slide h-100">
+                            <div data-anim-child="slide-left delay-5" class="infoCard -type-1">
+                                <div class="infoCard__image">
+                                    <img src="img/home-3/learn/5.png" alt="image">
+                                </div>
+                                <h5 class="infoCard__title text-17 lh-15 mt-10">React Native</h5>
+                            </div>
+                        </div>
+
+                        <div class="swiper-slide h-100">
+                            <div data-anim-child="slide-left delay-6" class="infoCard -type-1">
+                                <div class="infoCard__image">
+                                    <img src="img/home-3/learn/6.png" alt="image">
+                                </div>
+                                <h5 class="infoCard__title text-17 lh-15 mt-10">Vue Js</h5>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="d-flex justify-center x-gap-15 items-center pt-60 lg:pt-40">
+                        <div class="col-auto">
+                            <div class="pagination -arrows js-pagination"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="line px-50">
+        <div class="line__item bg-light-5"></div>
+    </div>
+
+
+    
+
+
+
+</div>
+
+

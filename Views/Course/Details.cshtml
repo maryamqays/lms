@@ -1,0 +1,1051 @@
+﻿@using Microsoft.AspNetCore.Identity;
+@model LMS.Models.ViewModel.LessonViewModel
+@inject SignInManager<IdentityUser> SignInManager
+@using Microsoft.AspNetCore.Mvc.Rendering
+@using System.Security.Claims;
+@using System.Text.RegularExpressions;
+@using Microsoft.AspNetCore.Mvc.Localization;
+@using System.Globalization;
+
+@inject IViewLocalizer Localizer
+@{
+    // Get the current culture
+    var culture = System.Threading.Thread.CurrentThread.CurrentCulture.Name;
+
+    // Check if the culture is "ar_SA"
+    if (culture == "ar-SA")
+    {
+        Layout = "_LayoutArabic";
+    }
+    else
+    {
+        // Set a default layout for other cultures
+        Layout = "_Layout";
+    }
+}
+
+<div class="content-wrapper  js-content-wrapper">
+
+
+
+    <section data-anim="fade" class="breadcrumbs ">
+        <div class="container">
+            <div class="row">
+                <div class="col-auto">
+                    <div class="breadcrumbs__content">
+
+                        <div class="breadcrumbs__item ">
+                            <a href="/">@Localizer["Home"] </a>
+                        </div>
+
+                        <div class="breadcrumbs__item ">
+                            <a href="/course">@Localizer["All courses"]</a>
+                        </div>
+
+                        <div class="breadcrumbs__item ">
+                            @if (culture == "ar-SA")
+                            {
+                                <a href="">@Model.Course.ArTitle</a>
+
+                            }
+                            else
+                            {
+                                <a href="">@Model.Course.EnTitle</a>
+                            }
+
+
+
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-auto">
+                    @if (User.Identity.IsAuthenticated && User.IsInRole("Admin") || User.IsInRole("Instructor"))
+                    {
+                        <div style="display: inline;">
+                            <form asp-controller="Course" asp-route-id="@Model.Course.Id" asp-action="Delete" method="post" onsubmit="return confirm('Are you sure you want to delete this category?');">
+                                @Html.AntiForgeryToken()
+                                <button type="submit"> <i class="fa-solid fa-trash"></i> </button>
+                            </form>
+                            <a asp-controller="Course" asp-action="Edit" asp-route-id="@Model.Course.Id"><i class="fa-solid fa-pen-to-square"></i></a>
+                        </div>
+                    }
+                </div>
+                <div>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+
+    <section class="page-header -type-5 bg-white">
+        <div class="page-header__bg">
+            <div class="bg-image js-lazy" data-bg="~/img/event-single/bg.png"></div>
+        </div>
+
+        <div class="container">
+            <div class="page-header__content  pb-">
+                <div class="row y-gap-30 relative">
+                    <div class="col-xl-7 col-lg-8">
+                        <div class="d-flex x-gap-15 y-gap-10 pb-20">
+
+
+                            @if (Model.enrollments.Count() > 0)
+                            {
+                                <div>
+                                    <div class="badge px-15 py-8 text-11 bg-green-1 text-dark-1 fw-400">@Localizer["BEST SELLER"]</div>
+                                </div>
+                            }
+
+                            @if ((DateTime.Now - Model.Course.DateOfRecord).TotalDays <= 15)
+                            {
+                                <div>
+                                    <div class="badge px-15 py-8 text-11 bg-orange-1 text-white fw-400">@Localizer["NEW"]</div>
+                                </div>
+                            }
+
+                            @if (Model.enrollments.Count() > 0)
+                            {
+
+                                <div>
+                                    <div class="badge px-15 py-8 text-11 bg-purple-1 text-white fw-400">@Localizer["POPULAR"]</div>
+                                </div>
+                            }
+                        </div>
+
+                        <div data-anim="slide-up delay-1">
+                            @if (culture == "ar-SA")
+                            {
+                                <h1 class="text-30 lh-14  lg:pr-0">@Model.Course.ArTitle</h1>
+
+                            }
+                            else
+                            {
+                                <h1 class="text-30 lh-14 pr-60 lg:pr-0">@Model.Course.EnTitle</h1>
+
+                            }
+                        </div>
+
+                        <p class="col-xl-9 mt-20">@Html.Raw(@Model.Course.Overview)</p>
+
+                        <div class="d-flex x-gap-30 y-gap-10 items-center flex-wrap pt-20">
+                            <div class="d-flex items-center text-light-1">
+                                @if (culture == "ar-SA")
+                                {
+                                    <div class="d-flex x-gap-10 items-center">
+
+                                        @for (int i = 1; i <= (int)@ViewBag.AverageScore; i++)
+                                        {
+                                            <div class="icon-star text-9 text-yellow-1"></div>
+                                        }
+
+                                    </div>
+
+                                    <div class="text-14 lh-1 text-yellow-1 mr-10">@ViewBag.AverageScore</div>
+
+
+                                    <div class="text-14 lh-1 mr-10">(@Model.CourseRatings.Count())</div>
+                                }
+
+                                else
+                                {
+                                    <div class="text-14 lh-1 text-yellow-1 mr-10">@ViewBag.AverageScore</div>
+                                    <div class="d-flex x-gap-10 items-center">
+
+                                        @for (int i = 1; i <= (int)@ViewBag.AverageScore; i++)
+                                        {
+                                            <div class="icon-star text-9 text-yellow-1"></div>
+                                        }
+
+                                    </div>
+                                    <div class="text-14 lh-1 ml-10">(@Model.CourseRatings.Count())</div>
+                                }
+                            </div>
+                            @if (culture == "ar-SA")
+                            {
+                                <div class="d-flex items-center text-light-1">
+                                    <div class="text-14 ml-8">@Model.enrollments.Count() مسجل في الكورس</div>
+
+                                    <div class="icon icon-person-3 text-13"></div>
+                                </div>
+                            }
+                            else
+                            {
+
+                                <div class="d-flex items-center text-light-1">
+                                    <div class="icon icon-person-3 text-13"></div>
+                                    <div class="text-14 ml-8">@Model.enrollments.Count() enrolled in this course</div>
+                                </div>
+                            }
+
+                            @if (culture == "ar-SA")
+                            {
+                                <div class="d-flex items-center text-light-1">
+                                    <div class="icon icon-wall-clock text-13"></div>
+                                    <div class="text-14 ml-8">اخر تحديث @Model.Course.CourseLastUpdate.ToString("d", CultureInfo.InvariantCulture)</div>
+                                </div>
+                            }
+
+
+                            else
+                            {
+                                <div class="d-flex items-center text-light-1">
+                                    <div class="icon icon-wall-clock text-13"></div>
+                                    <div class="text-14 ml-8">Last updated @Model.Course.CourseLastUpdate.ToString("d")</div>
+                                </div>
+                            }
+
+
+                        </div>
+
+                        <div class="d-flex items-center pt-20">
+                            <div class="bg-image size-30 rounded-full js-lazy" data-bg="/img/avatars/small-1.png"></div>
+                            <div class="text-14 lh-1 ml-10">Ali Tufan</div>
+                        </div>
+                    </div>
+
+                    <div class="courses-single-info" style="position:relative">
+                        <div class="bg-white shadow-2 rounded-8 border-light py-10 px-10">
+                            <div class="relative">
+                                @{
+                                    string embeddedUrl = null;
+                                    if (!string.IsNullOrEmpty(Model.Course.CourseIntroductionVideo))
+                                    {
+                                        var match = Regex.Match(Model.Course.CourseIntroductionVideo, "(?<=v=|youtu.be/|/vi/|/embed/|/v/|/e/|/u/\\w+/|/embed/|/v/|/a/|/p/|/br/|//www.youtube.com/embed/|//www.youtube.com/watch?v=|//youtu.be/|//www.youtube.com/v/|//embed/|//u//\\w+//|//embed/|//v//|//a//|//p//|//br//)([\\w-]+)(.*)");
+                                        var videoId = match.Success ? match.Groups[1].Value : "";
+                                        embeddedUrl = "https://www.youtube.com/embed/" + videoId;
+                                    }
+                                }
+                                @if (!string.IsNullOrEmpty(embeddedUrl))
+                                {
+                                    <iframe class="w-1/1" src="@embeddedUrl" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                }
+                                else
+                                {
+                                    <img class="w-1/1" src="~/img/misc/1.png" alt="image">
+                                }
+
+                            </div>
+
+
+                            <div class="courses-single-info__content scroll-bar-1 pt-30 pb-20 px-20">
+                                <div class="d-flex justify-between items-center mb-30">
+                                    <div class="text-24 lh-1 text-dark-1 fw-500">
+                                        @if (culture == "ar-SA")
+                                        {
+                                            @(Model.Course.Fee == 0.00m ? "مجانا" : $"${Model.Course.Fee}")
+
+
+                                        }
+                                        else
+                                        {
+                                            @(Model.Course.Fee == 0.00m ? "Free" : $"${Model.Course.Fee}")
+                                        }
+                                    </div>
+
+                                </div>
+                                @if (!User.Identity.IsAuthenticated)
+                                {
+                                    <!-- User is not signed in, redirect to register page -->
+
+                                    <a href="/Identity/Account/Register" class="button -md -purple-1 text-white w-1/1">@Localizer["Log in to Entroll"] </a>
+                                }
+                                else if (Model.Course.Enrollments != null && Model.Course.Enrollments.Any(u => u.UserId == SignInManager.UserManager.GetUserId(User)))
+                                {
+                                    <!-- User is already enrolled -->
+                                    <button class="button -md -purple-1 text-white w-1/1">@Localizer["Enroll sucessfully"] </button>
+
+                                    <a href="/course/lesson/@Model.Course.Id" class="button -md -outline-dark-1 text-dark-1 w-1/1 mt-10">@Localizer["Go to Course"]</a>
+
+
+                                }
+                                else
+                                {
+                                    <!-- User is not enrolled -->
+                                    @using (Html.BeginForm("Enroll", "Course", new { courseId = Model.Course.Id }))
+                                    {
+                                        <button class="button -md -purple-1 text-white w-1/1">@Localizer["Enroll now"] </button>
+
+                                    }
+                                }
+
+                                @* <div class="text-14 lh-1 text-center mt-30">30-Day Money-Back Guarantee</div>*@
+
+                                <div class="mt-25">
+
+                                    @if (culture == "ar-SA")
+                                    {
+
+                                    }
+                                    else
+                                    {
+
+                                    }
+                                    <div class="d-flex justify-between py-8 ">
+                                        @if (culture == "ar-SA")
+                                        {
+                                            <div class="d-flex items-center text-dark-1">
+
+                                                <div class="ml-10">الدروس</div>
+                                                <div class="icon-video-file"></div>
+
+                                            </div>
+                                            <div>@Model.CourseChapterContents.Count()</div>
+                                        }
+                                        else
+                                        {
+                                            <div class="d-flex items-center text-dark-1">
+
+                                                <div class="icon-video-file"></div>
+                                                <div class="ml-10">Lessons</div>
+                                            </div>
+                                            <div>@Model.CourseChapterContents.Count()</div>
+
+                                        }
+
+                                    </div>
+                                    @*
+                                    <div class="d-flex justify-between py-8 border-top-light">
+                                    <div class="d-flex items-center text-dark-1">
+                                    <div class="icon-puzzle"></div>
+                                    <div class="ml-10">Quizzes</div>
+                                    </div>
+
+                                    <div>3</div>
+                                    </div>
+                                    *@
+
+                                    <div class="d-flex justify-between py-8 border-top-light">
+                                        <div class="d-flex items-center text-dark-1">
+                                            @if (culture == "ar-SA")
+                                            {
+                                                <div class="ml-10">المدة</div>
+
+                                                <div class="icon-clock-2"></div>
+
+                                            }
+                                            else
+                                            {
+                                                <div class="icon-clock-2"></div>
+                                                <div class="ml-10">Duration</div>
+                                            }
+
+                                        </div>
+                                        @{
+                                            int totalDurations = Model.CourseChapterContents
+                                            .Where(content => content.courseChapter.courseId == Model.Course.Id) // Filter contents by CourseId
+                                            .Sum(content => content.Duration); // Sum the durations
+
+
+                                        }
+                                        <div>@totalDurations @Localizer["min"] </div>
+                                    </div>
+
+                                    <div class="d-flex justify-between py-8 border-top-light">
+                                        <div class="d-flex items-center text-dark-1">
+                                            @if (culture == "ar-SA")
+                                            {
+                                                <div class="ml-10">الصعوبة</div>
+
+                                                <div class="icon-bar-chart-2"></div>
+                                            }
+                                            else
+                                            {
+                                                <div class="icon-bar-chart-2"></div>
+                                                <div class="ml-10">Skill level</div>
+                                            }
+
+                                        </div>
+                                        <div>@Model.Course.Level</div>
+                                    </div>
+
+                                    <div class="d-flex justify-between py-8 border-top-light">
+                                        <div class="d-flex items-center text-dark-1">
+                                            @if (culture == "ar-SA")
+                                            {
+                                                <div class="ml-10">اللغة</div>
+                                                <div class="icon-translate"></div>
+
+                                            }
+                                            else
+                                            {
+                                                <div class="icon-translate"></div>
+                                                <div class="ml-10">Language</div>
+                                            }
+
+                                        </div>
+                                        <div>@Model.Course.Language</div>
+                                    </div>
+
+                                    <div class="d-flex justify-between py-8 border-top-light">
+                                        <div class="d-flex items-center text-dark-1">
+                                            @if (culture == "ar-SA")
+                                            {
+                                                <div class="ml-10">الشهادة</div>
+
+                                                <div class="icon-badge"></div>
+
+                                            }
+                                            else
+                                            {
+                                                <div class="icon-badge"></div>
+                                                <div class="ml-10">Certificate</div>
+                                            }
+
+                                        </div>
+                                        <div>@Model.Course.CertificateType</div>
+                                    </div>
+
+                                    <div class="d-flex justify-between py-8 border-top-light">
+                                        <div class="d-flex items-center text-dark-1">
+                                            @if (culture == "ar-SA")
+                                            {
+                                                <div class="ml-10">وصول لمدى الحياة</div>
+
+                                                <div class="icon-infinity"></div>
+                                            }
+                                            else
+                                            {
+                                                <div class="icon-infinity"></div>
+                                                <div class="ml-10">Full lifetime access</div>
+                                            }
+
+                                        </div>
+                                        <div>@Localizer["Yes"]</div>
+                                    </div>
+
+                                </div>
+
+                                <div class="d-flex justify-center pt-15">
+
+                                    <a href="#" class="d-flex justify-center items-center size-40 rounded-full">
+                                        <i class="fa fa-facebook"></i>
+                                    </a>
+
+                                    <a href="#" class="d-flex justify-center items-center size-40 rounded-full">
+                                        <i class="fa fa-twitter"></i>
+                                    </a>
+
+                                    <a href="#" class="d-flex justify-center items-center size-40 rounded-full">
+                                        <i class="fa fa-instagram"></i>
+                                    </a>
+
+                                    <a href="#" class="d-flex justify-center items-center size-40 rounded-full">
+                                        <i class="fa fa-linkedin"></i>
+                                    </a>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="layout-pt-md layout-pb-md">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="tabs -active-purple-2 js-tabs">
+                        <div class="tabs__controls d-flex js-tabs-controls">
+                            @if (culture == "ar-SA")
+                            {
+                                <button class="tabs__button js-tabs-button is-active ms-3" data-tab-target=".-tab-item-1" type="button">
+                                    مخلص
+                                </button>
+                            }
+                            else
+                            {
+                                <button class="tabs__button js-tabs-button is-active" data-tab-target=".-tab-item-1" type="button">
+                                    Overview
+                                </button>
+                            }
+                            <button class="tabs__button js-tabs-button ml-30" data-tab-target=".-tab-item-2" type="button">
+                                @Localizer["Course Content"]
+                            </button>
+                            <button class="tabs__button js-tabs-button ml-30" data-tab-target=".-tab-item-3" type="button">
+                                @Localizer["Instructors"]
+                            </button>
+                            <button class="tabs__button js-tabs-button ml-30" data-tab-target=".-tab-item-4" type="button">
+                                @Localizer["Reviews"]
+                            </button>
+                        </div>
+
+                        <div class="tabs__content pt-60 lg:pt-40 js-tabs-content">
+                            <div class="tabs__pane -tab-item-1 is-active">
+                                <h4 class="text-18 fw-500">@Localizer["Description"] </h4>
+
+                                <div class="show-more mt-30 js-show-more">
+                                    <div class="show-more__content">
+                                        <p class="">
+                                            @Html.Raw(@Model.Course.Overview)
+                                        </p>
+                                    </div>
+
+                                    <button id="showMoreButton" class="show-more__button text-purple-1 fw-500 underline mt-30">@Localizer["Show more"] </button>
+                                </div>
+
+                                <div class="mt-60">
+                                    <h4 class="text-20 mb-30">@Localizer["What you'll learn"] </h4>
+                                    <div class="row x-gap-100 justfiy-between">
+                                        <div class="col-md-12">
+                                            <div class="y-gap-20">
+
+                                                <div class="d-flex items-center">
+                                                    <div class="d-flex justify-center items-center border-light rounded-full size-20 mr-10">
+                                                    </div>
+                                                    @Html.Raw(Model.Course.Outcomes)
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+
+                                <div class="mt-60">
+                                    <h4 class="text-20  mb-30">@Localizer["Prerequisite"]</h4>
+                                    <div class="d-flex items-center">
+                                        <div class="d-flex justify-center items-center border-light rounded-full size-20 mr-10">
+                                        </div>
+                                        <p>@Html.Raw(Model.Course.Prerequisite)</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tabs__pane -tab-item-2">
+                                <div class="d-flex align-items-center">
+                                    <h2 class="text-20 fw-500">@Localizer["Course Content"]</h2>
+                                    @if (User.Identity.IsAuthenticated && User.IsInRole("Admin") || User.IsInRole("Instructor"))
+                                    {
+                                        <a href="/coursechapter/create?courseId=@Model.Course.Id" class="button -sm -purple-3 ml-10">Add</a>
+                                    }
+                                </div>
+
+                                <div class="d-flex justify-between items-center mt-30">
+                                    @if (culture == "ar-SA")
+                                    {
+                                        <div class="">@Model.CourseChapters.Count()  اجزاء • @Model.CourseChapterContents.Count() دروس</div>
+
+                                    }
+                                    else
+                                    {
+                                        <div class="">@Model.CourseChapters.Count()  sections • @Model.CourseChapterContents.Count() lectures</div>
+
+                                    }
+                                </div>
+
+                                <div class="mt-10">
+                                    <div class="accordion -block-2 text-left js-accordion">
+                                        @foreach (var chapter in Model.CourseChapters.OrderBy(c => c.Indx))
+                                        {
+                                            <div class="accordion__item">
+                                                <div class="accordion__button py-20 px-30 bg-light-4">
+                                                    <div class="d-flex items-center">
+                                                        @if (culture == "ar-SA")
+                                                        {
+                                                            <span class="text-17 fw-500 text-dark-1">@chapter.Name</span>
+
+                                                            <div class="accordion__icon">
+                                                                <div class="icon" data-feather="chevron-down"></div>
+                                                                <div class="icon" data-feather="chevron-up"></div>
+                                                            </div>
+                                                            @if (User.Identity.IsAuthenticated && User.IsInRole("Admin") || User.IsInRole("Instructor"))
+                                                            {
+                                                                <div class="d-inline-flex align-items-center m-5">
+                                                                    <a class="" asp-controller="coursechapter" asp-action="Edit" asp-route-id="@chapter.Id"><i class="fa-solid fa-pen-to-square"></i></a> |
+                                                                    <form asp-action="Delete" asp-controller="coursechapter" asp-route-id="@chapter.Id" method="post" onsubmit="return confirm('Are you sure you want to delete this category?');">
+                                                                        @Html.AntiForgeryToken()
+                                                                        <button type="submit"><i class="fa-solid fa-trash"></i></button>
+                                                                    </form> |
+                                                                    <a href="/coursechaptercontent/create?CourseChapterId=@chapter.Id" class="">Add Course Chapter Content</a>
+                                                                </div>
+
+
+
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+
+                                                            <div class="accordion__icon">
+                                                                <div class="icon" data-feather="chevron-down"></div>
+                                                                <div class="icon" data-feather="chevron-up"></div>
+                                                            </div>
+                                                            <span class="text-17 fw-500 text-dark-1">@chapter.Name</span>
+                                                            @if (User.Identity.IsAuthenticated && User.IsInRole("Admin") || User.IsInRole("Instructor"))
+                                                            {
+                                                                <div class="d-inline-flex align-items-center">
+                                                                    <a class="" asp-controller="coursechapter" asp-action="Edit" asp-route-id="@chapter.Id"><i class="fa-solid fa-pen-to-square"></i></a> |
+                                                                    <form asp-action="Delete" asp-controller="coursechapter" asp-route-id="@chapter.Id" method="post" onsubmit="return confirm('Are you sure you want to delete this category?');">
+                                                                        @Html.AntiForgeryToken()
+                                                                        <button type="submit" class=""><i class="fa-solid fa-trash"></i></button>
+                                                                    </form> |
+                                                                    <a href="/coursechaptercontent/create?CourseChapterId=@chapter.Id" class="button -sm -purple-3 ">Add Course Chapter Content</a>
+                                                                </div>
+
+
+
+                                                            }
+
+                                                        }
+                                                    </div>
+
+                                                    @{
+                                                        int lectureCount = Model.CourseChapterContents.Count(c => c.CourseChapterId == chapter.Id);
+                                                        int totalDuration = Model.CourseChapterContents.Where(c => c.CourseChapterId == chapter.Id).Sum(c => c.Duration);
+                                                    }
+                                                    @if (culture == "ar-SA")
+                                                    {
+                                                        <div>@lectureCount  محاضرة • @totalDuration دقيقة</div>
+
+                                                    }
+                                                    else
+                                                    {
+                                                        <div>@lectureCount lectures • @(totalDuration / 60) Hours</div>
+                                                    }
+                                                </div>
+                                                <div class="accordion__content">
+                                                    <div class="accordion__content__inner px-30 py-30">
+                                                        <div class="y-gap-20">
+                                                            <div class="d-flex justify-between">
+                                                                <div class="row">
+                                                                    @foreach (var content in Model.CourseChapterContents.Where(c => c.CourseChapterId == chapter.Id).OrderBy(c => c.Indx))
+                                                                    {
+
+                                                                        @if (culture == "ar-SA")
+                                                                        {
+
+                                                                            <div class="d-flex items-center mt-5">
+                                                                                @content.Title
+                                                                                <div class="d-flex flex-grow-1 align-items-center">
+                                                                                    <div class="d-flex justify-center items-center size-30 rounded-full bg-purple-3 mr-5">
+                                                                                        <div class="icon-play text-9"></div>
+                                                                                    </div>
+
+                                                                                </div>
+                                                                                @if (User.Identity.IsAuthenticated && User.IsInRole("Admin") || User.IsInRole("Instructor"))
+                                                                                {
+                                                                                    <div class="d-inline-flex align-items-center">
+                                                                                        <a class=" asp-controller="coursechaptercontent" asp-action="Edit" asp-route-id="@content.Id"><i class="fa-solid fa-pen-to-square"></i></a> |
+                                                                                        <form asp-action="Delete" asp-controller="coursechaptercontent" asp-route-id="@content.Id" method="post" onsubmit="return confirm('Are you sure you want to delete this category?');">
+                                                                                            @Html.AntiForgeryToken()
+                                                                                            <button type="submit" class=""><i class="fa-solid fa-trash"></i></button>
+                                                                                        </form>
+                                                                                    </div>
+                                                                                }
+                                                                                <div class="d-flex justify-content-end">
+                                                                                    <div href="#" class="text-14 lh-1 ms-2 text-purple-1 underline">@(content.Duration/60) ساعة</div>
+                                                                                </div>
+                                                                            </div>
+                                                                        }
+
+                                                                        else
+                                                                        {
+                                                                            <div class="d-flex items-center mt-5">
+                                                                                <div class="d-flex justify-center items-center size-30 rounded-full bg-purple-3 mr-10">
+                                                                                    <div class="icon-play text-9"></div>
+                                                                                </div>
+                                                                                <div class="d-flex flex-grow-1 align-items-center">
+                                                                                    @content.Title
+
+                                                                                    @if (User.Identity.IsAuthenticated && User.IsInRole("Admin") || User.IsInRole("Instructor"))
+                                                                                    {
+                                                                                        <div class="d-inline-flex align-items-start">
+                                                                                            <a class="" asp-controller="coursechaptercontent" asp-action="Edit" asp-route-id="@content.Id"><i class="fa-solid fa-pen-to-square"></i></a> |
+                                                                                            <form asp-action="Delete" asp-controller="coursechaptercontent" asp-route-id="@content.Id" method="post" onsubmit="return confirm('Are you sure you want to delete this category?');">
+                                                                                                @Html.AntiForgeryToken()
+                                                                                                <button type="submit" class=""><i class="fa-solid fa-trash"></i></button>
+                                                                                            </form>
+                                                                                        </div>
+                                                                                    }
+
+                                                                                </div>
+                                                                                <div class="align-items-end">
+                                                                                    <div class="text-14 lh-1 ms-2 text-purple-1 underline">@(content.Duration/60) Hour</div>
+                                                                                </div>
+
+                                                                            </div>
+
+
+                                                                        }
+                                                                    }
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+                            <div class="tabs__pane -tab-item-3">
+                                <h2 class="text-20 fw-500">Instructor</h2>
+
+                                <div class="mt-30">
+                                    <div class="d-flex x-gap-20 y-gap-20 items-center flex-wrap">
+                                        <div class="size-120">
+                                            <img class="object-cover" src="~/img/misc/verified/1.png" alt="image">
+                                        </div>
+
+                                        <div class="">
+                                            <h5 class="text-17 lh-14 fw-500">@Model.Course.ApplicationUser.UserName</h5>
+                                            <p class="mt-5">President of Sales</p>
+
+                                            <div class="d-flex x-gap-20 y-gap-10 flex-wrap items-center pt-10">
+                                                <div class="d-flex items-center">
+                                                    <div class="d-flex items-center mr-8">
+                                                        <div class="icon-star text-11 text-yellow-1"></div>
+                                                        <div class="text-14 lh-12 text-yellow-1 ml-5">4.5</div>
+                                                    </div>
+                                                    <div class="text-13 lh-1">Instructor Rating</div>
+                                                </div>
+
+                                                <div class="d-flex items-center text-light-1">
+                                                    <div class="icon-comment text-13 mr-8"></div>
+                                                    <div class="text-13 lh-1">23,987 Reviews</div>
+                                                </div>
+
+                                                <div class="d-flex items-center text-light-1">
+                                                    <div class="icon-person-3 text-13 mr-8"></div>
+                                                    <div class="text-13 lh-1">692 Students</div>
+                                                </div>
+
+                                                <div class="d-flex items-center text-light-1">
+                                                    <div class="icon-wall-clock text-13 mr-8"></div>
+                                                    <div class="text-13 lh-1">15 Course</div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="mt-30">
+                                        <p>
+                                            Back in 2010, I started brainspin with a desire to design compelling and engaging apps. For over 7 years, I have designed many high profile web and iPhone applications. The applications range from 3D medical aided web applications to project management applications for niche industries.
+                                            <br><br>
+                                            I am also the founder of a large local design organization, Salt Lake Designers, where I and other local influencers help cultivate the talents of up and coming UX designers through workshops and panel discussions.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tabs__pane -tab-item-4">
+                                <div class="blogPost -comments">
+                                    <div class="blogPost__content">
+                                        <h2 class="text-20 fw-500">Student feedback</h2>
+                                        <div class="row x-gap-10 y-gap-10 pt-30">
+                                            <div class="col-md-4">
+                                                <div class="d-flex items-center justify-center flex-column py-50 text-center bg-light-6 rounded-8">
+                                                    <div class="text-60 lh-11 text-dark-1 fw-500" style="font-size: 7rem; font-size: 3.5rem;">@ViewBag.AverageScore</div>
+                                                    <div class="d-flex x-gap-5 mt-10">
+                                                        @if (ViewBag.AverageScore is int averageScor)
+                                                        {
+                                                            for (int i = 1; i <= averageScor; i++)
+                                                            {
+                                                                <div class="icon-star text-11 text-yellow-1"></div>
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                        }
+                                                    </div>
+                                                    <div class="mt-10">Course Rating</div>
+                                                </div>
+                                            </div>
+
+                                            @* <div class="col-md-8">
+                                            <div class="py-20 px-30 bg-light-6 rounded-8">
+                                            <div class="row y-gap-15">
+
+                                            <div class="col-12">
+                                            <div class="d-flex items-center">
+                                            <div class="progress-bar w-1/1 mr-15">
+                                            <div class="progress-bar__bg bg-light-12"></div>
+                                            <div class="progress-bar__bar bg-purple-1 w-1/1"></div>
+                                            </div>
+                                            <div class="d-flex x-gap-5 pr-15">
+                                            <div class="icon-star text-11 text-yellow-1"></div>
+                                            <div class="icon-star text-11 text-yellow-1"></div>
+                                            <div class="icon-star text-11 text-yellow-1"></div>
+                                            <div class="icon-star text-11 text-yellow-1"></div>
+                                            <div class="icon-star text-11 text-yellow-1"></div>
+                                            </div>
+                                            <div class="text-dark-1">70%</div>
+                                            </div>
+                                            </div>
+
+                                            <div class="col-12">
+                                            <div class="d-flex items-center">
+                                            <div class="progress-bar w-1/1 mr-15">
+                                            <div class="progress-bar__bg bg-light-12"></div>
+                                            <div class="progress-bar__bar bg-purple-1 w-1/2"></div>
+                                            </div>
+                                            <div class="d-flex x-gap-5 pr-15">
+                                            <div class="icon-star text-11 text-yellow-1"></div>
+                                            <div class="icon-star text-11 text-yellow-1"></div>
+                                            <div class="icon-star text-11 text-yellow-1"></div>
+                                            <div class="icon-star text-11 text-yellow-1"></div>
+
+                                            </div>
+                                            <div class="text-dark-1">15%</div>
+                                            </div>
+                                            </div>
+
+                                            <div class="col-12">
+                                            <div class="d-flex items-center">
+                                            <div class="progress-bar w-1/1 mr-15">
+                                            <div class="progress-bar__bg bg-light-12"></div>
+                                            <div class="progress-bar__bar bg-purple-1 w-1/3"></div>
+                                            </div>
+                                            <div class="d-flex x-gap-5 pr-15">
+                                            <div class="icon-star text-11 text-yellow-1"></div>
+                                            <div class="icon-star text-11 text-yellow-1"></div>
+                                            <div class="icon-star text-11 text-yellow-1"></div>
+
+                                            </div>
+                                            <div class="text-dark-1">20%</div>
+                                            </div>
+                                            </div>
+
+                                            <div class="col-12">
+                                            <div class="d-flex items-center">
+                                            <div class="progress-bar w-1/1 mr-15">
+                                            <div class="progress-bar__bg bg-light-12"></div>
+                                            <div class="progress-bar__bar bg-purple-1 w-1/5"></div>
+                                            </div>
+                                            <div class="d-flex x-gap-5 pr-15">
+                                            <div class="icon-star text-11 text-yellow-1"></div>
+                                            <div class="icon-star text-11 text-yellow-1"></div>
+
+                                            </div>
+                                            <div class="text-dark-1">3%</div>
+                                            </div>
+                                            </div>
+
+                                            <div class="col-12">
+                                            <div class="d-flex items-center">
+                                            <div class="progress-bar w-1/1 mr-15">
+                                            <div class="progress-bar__bg bg-light-12"></div>
+                                            <div class="progress-bar__bar bg-purple-1 w-1/7"></div>
+                                            </div>
+                                            <div class="d-flex x-gap-5 pr-15">
+                                            <div class="icon-star text-11 text-yellow-1"></div>
+
+                                            </div>
+                                            <div class="text-dark-1">2%</div>
+                                            </div>
+                                            </div>
+
+                                            </div>
+                                            </div>
+                                            </div>*@
+                                        </div>
+
+
+                                        <div class="respondForm pt-60">
+                                            <h3 class="text-20 fw-500">
+                                                Rate The Course
+                                            </h3>
+
+                                            <div class="mt-30">
+                                                @if (SignInManager.IsSignedIn(User))
+                                                {
+                                                    @if (Model.CourseRatings != null && Model.CourseRatings.Any(cr => cr.ApplicationUserId == User.FindFirstValue(ClaimTypes.NameIdentifier)))
+                                                    {
+                                                        <p>You have already submitted a rating for this course</p>
+                                                    }
+                                                    else
+                                                    {
+                                                        <form class="col-lg-6" method="post" asp-controller="Course" asp-action="AddRating" asp-route-id="@Model.Course.Id">
+                                                            <input type="hidden" name="courseId" value="@Model.Course.Id" />
+
+                                                            <div class="form-group mt-2">
+                                                                <label for="instructorPerformance">Instructor Performance:</label>
+                                                                <div class="d-flex  pt-10">
+                                                                    <input type="hidden" name="instructorPerformance" value="0" />
+
+                                                                    <div class="icon-star text-14 text-yellow-1" onclick="rateCourse(this, 'instructorPerformance', 1)"></div>
+                                                                    <div class="icon-star text-14 text-yellow-1 ms-2" onclick="rateCourse(this, 'instructorPerformance', 2)"></div>
+                                                                    <div class="icon-star text-14 text-yellow-1 ms-2" onclick="rateCourse(this, 'instructorPerformance', 3)"></div>
+                                                                    <div class="icon-star text-14 text-yellow-1 ms-2" onclick="rateCourse(this, 'instructorPerformance', 4)"></div>
+                                                                    <div class="icon-star text-14 text-yellow-1 ms-2" onclick="rateCourse(this, 'instructorPerformance', 5)"></div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group  mt-2">
+                                                                <label for="courseContent">Course Content:</label>
+                                                                <div class="d-flex  pt-10">
+                                                                    <input type="hidden" name="courseContent" value="0" />
+
+                                                                    <div class="icon-star text-14 text-yellow-1" onclick="rateCourse(this, 'courseContent', 1)"></div>
+                                                                    <div class="icon-star text-14 text-yellow-1 ms-2" onclick="rateCourse(this, 'courseContent', 2)"></div>
+                                                                    <div class="icon-star text-14 text-yellow-1 ms-2" onclick="rateCourse(this, 'courseContent', 3)"></div>
+                                                                    <div class="icon-star text-14 text-yellow-1 ms-2" onclick="rateCourse(this, 'courseContent', 4)"></div>
+                                                                    <div class="icon-star text-14 text-yellow-1 ms-2" onclick="rateCourse(this, 'courseContent', 5)"></div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group  mt-2">
+                                                                <label for="courseDuration">Course Duration:</label>
+                                                                <div class="d-flex  pt-10">
+                                                                    <input type="hidden" name="courseDuration" value="0" />
+
+                                                                    <div class="icon-star text-14 text-yellow-1" onclick="rateCourse(this, 'courseDuration', 1)"></div>
+                                                                    <div class="icon-star text-14 text-yellow-1 ms-2" onclick="rateCourse(this, 'courseDuration', 2)"></div>
+                                                                    <div class="icon-star text-14 text-yellow-1 ms-2" onclick="rateCourse(this, 'courseDuration', 3)"></div>
+                                                                    <div class="icon-star text-14 text-yellow-1 ms-2" onclick="rateCourse(this, 'courseDuration', 4)"></div>
+                                                                    <div class="icon-star text-14 text-yellow-1 ms-2" onclick="rateCourse(this, 'courseDuration', 5)"></div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group  mt-2">
+                                                                <label for="courseTime">Course Time:</label>
+                                                                <div class="d-flex  pt-10">
+                                                                    <input type="hidden" name="courseTime" value="0" />
+
+                                                                    <div class="icon-star text-14 text-yellow-1" onclick="rateCourse(this, 'courseTime', 1)"></div>
+                                                                    <div class="icon-star text-14 text-yellow-1 ms-2" onclick="rateCourse(this, 'courseTime', 2)"></div>
+                                                                    <div class="icon-star text-14 text-yellow-1 ms-2" onclick="rateCourse(this, 'courseTime', 3)"></div>
+                                                                    <div class="icon-star text-14 text-yellow-1 ms-2" onclick="rateCourse(this, 'courseTime', 4)"></div>
+                                                                    <div class="icon-star text-14 text-yellow-1 ms-2" onclick="rateCourse(this, 'courseTime', 5)"></div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group  mt-2">
+                                                                <label for="OutComeAchievment">Outcome Achievement:</label>
+                                                                <div class="d-flex  pt-10">
+                                                                    <input type="hidden" name="OutComeAchievment" value="0" />
+
+                                                                    <div class="icon-star text-14 text-yellow-1" onclick="rateCourse(this, 'OutComeAchievment', 1)"></div>
+                                                                    <div class="icon-star text-14 text-yellow-1 ms-2" onclick="rateCourse(this, 'OutComeAchievment', 2)"></div>
+                                                                    <div class="icon-star text-14 text-yellow-1 ms-2" onclick="rateCourse(this, 'OutComeAchievment', 3)"></div>
+                                                                    <div class="icon-star text-14 text-yellow-1 ms-2" onclick="rateCourse(this, 'OutComeAchievment', 4)"></div>
+                                                                    <div class="icon-star text-14 text-yellow-1 ms-2" onclick="rateCourse(this, 'OutComeAchievment', 5)"></div>
+                                                                </div>
+                                                            </div>
+
+                                                            <button type="submit" class="button -md -purple-1 text-white  mt-4">Submit Rating</button>
+                                                        </form>
+                                                    }
+                                                    <script>
+                                                        function rateCourse(star, ratingType, value) {
+                                                            // Remove the 'text-yellow-1' class from all stars
+                                                            $(star).parent().children().removeClass('text-yellow-1');
+
+                                                            // Add the 'text-yellow-1' class to all stars up to and including the clicked one
+                                                            $(star).prevAll().addBack().addClass('text-yellow-1');
+
+                                                            // Update hidden input field
+                                                            $('input[name="' + ratingType + '"]').val(value);
+                                                        }
+                                                    </script>
+
+
+                                                    <form class="contact-form respondForm__form row y-gap-30 pt-30" method="post" asp-controller="Course" asp-action="AddComment" asp-route-id="@Model.Course.Id">
+                                                        <div class="col-12">
+                                                            <label for="comment" class="text-16 lh-1 fw-500 text-dark-1 mb-10">Add a  Comment</label>
+                                                            <input id="comment" name="Comment.comment" placeholder="Message" type="text" style="height: 100px;">
+
+
+                                                        </div>
+                                                        <input type="hidden" name="CourseId" value="@Model.Course.Id" />
+                                                        <div class="col-12">
+                                                            <button type="submit" name="submit" id="submit" class="button -md -purple-1 text-white">
+                                                                Submit
+                                                            </button>
+                                                        </div>
+                                                    </form>
+                                                }
+                                                else
+                                                {
+                                                    <p class="mt-5">You need to <a href="/identity/account/register" class="text-decoration-none">sign up</a> or <a href="/identity/account/login" class="text-decoration-none">sign in</a> to post a comment or rate the course .</p>
+                                                }
+
+                                            </div>
+                                        </div>
+
+
+                                        <h2 class="text-20 fw-500 mt-60 lg:mt-40">Reviews</h2>
+                                        @foreach (var comment in Model.courseComments)
+                                        {
+                                            <div class="comments__item-inner md:direction-column mt-4">
+                                                <div class="comments__img mr-20">
+                                                    <div class="bg-image rounded-full js-lazy" data-bg="/img/avatars/1.png"></div>
+                                                </div>
+
+                                                <div class="comments__body md:mt-15">
+                                                    <div class="comments__header">
+                                                        <h4 class="text-17 fw-500 lh-15">
+                                                            @comment.ApplicationUser.UserName.Substring(0, comment.ApplicationUser.UserName.IndexOf('@'))
+                                                            @{
+                                                                DateTime currentDate = DateTime.Now.Date; // Get the current date without time
+                                                                int daysAgo = (currentDate - comment.DateTime.Date).Days;
+                                                                string timeAgo = daysAgo == 1 ? "1 day ago" : $"{daysAgo} days ago";
+                                                            }
+
+                                                            <span class="text-13 text-light-1 fw-400">@timeAgo</span>
+                                                        </h4>
+
+                                                        <div class="stars"></div>
+                                                    </div>
+
+                                                    <div class="comments__text mt-10 ">
+                                                        <p>@comment.Comment</p>
+                                                    </div>
+
+
+                                                </div>
+                                            </div>
+                                        }
+
+
+
+
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+
+
+
+<script>
+    $(document).ready(function () {
+        // Add a click event handler to the button
+        $('#showMoreButton').click(function () {
+            // Get the current text of the button
+            var buttonText = $(this).text().trim();
+
+            // Toggle the text based on the current value
+            if (buttonText === 'Show more') {
+                $(this).text('Show less');
+            } else {
+                $(this).text('Show more');
+            }
+        });
+
+        // Set the initial text to "Show more" when the page loads
+        $('#showMoreButton').text('Show more');
+    });
+
+</script>
+
+

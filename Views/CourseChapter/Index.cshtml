@@ -1,0 +1,62 @@
+﻿@{
+
+    Layout = "AdminLayout";
+}
+<h1>Course Chapters</h1>
+<hr />
+<p>
+    <a class="btn btn-primary text-white" asp-action="Create">Create New</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Name
+            </th>
+            <th>
+                Indx
+            </th>
+            <th>
+                Course
+            </th>
+            <th>
+                IsDeleted
+            </th>
+            <th>
+                Ishidden
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @item.Name
+                </td>
+                <td>
+                    @item.Indx
+                </td>
+                <td>
+                    @item.Course.EnTitle
+                </td>
+                <td>
+                    @item.IsDeleted
+                </td>
+                <td>
+                    @item.Ishidden
+                </td>
+                <td>
+                    <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <form asp-action="Delete" asp-route-id="@item.Id" method="post" onsubmit="return confirm('Are you sure you want to delete this category?');">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-danger text-white">Delete</button>
+                    </form>
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
