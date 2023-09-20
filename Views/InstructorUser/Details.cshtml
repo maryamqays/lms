@@ -1,0 +1,37 @@
+﻿@model LMS.Models.InstructorUser
+@{
+
+    Layout = "AdminLayout";
+
+
+
+}
+<h2>Instructor Details</h2>
+<hr />
+
+<div>
+
+    <div class="row">
+        <div class="col-md-4 font-weight-bold">Instructor Name:</div>
+        <div class="col-md-8">@Model.UserName</div>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col-md-4 font-weight-bold">Profile Picture:</div>
+        <div class="col-md-8"><img src="@Model.ImageUrl" alt="Profile Picture" width="100" /></div>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col-md-4 font-weight-bold">Instructor Overview:</div>
+        <div class="col-md-8">@Html.Raw(@Model.Description)</div>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col-md-4 font-weight-bold">Job Title:</div>
+        <div class="col-md-8">@Model.JobTitle</div>
+    </div>
+
+    <div class="mt-4">
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
+    </div>
+</div>

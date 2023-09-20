@@ -117,17 +117,41 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Add a Comment" xml:space="preserve">
+    <value>أضف تعليقًا</value>
+  </data>
   <data name="All courses" xml:space="preserve">
     <value>جميع الكورسات</value>
   </data>
   <data name="BEST SELLER" xml:space="preserve">
     <value>أفضل مبيع</value>
   </data>
+  <data name="Certificate" xml:space="preserve">
+    <value>الشهادة</value>
+  </data>
   <data name="Course Content" xml:space="preserve">
     <value>محتوى الدورة</value>
   </data>
+  <data name="Course Duration" xml:space="preserve">
+    <value>مدة الدورة</value>
+  </data>
+  <data name="Course Rating" xml:space="preserve">
+    <value>تقييم الدورة</value>
+  </data>
+  <data name="Course Time" xml:space="preserve">
+    <value>وقت الدورة</value>
+  </data>
   <data name="Description" xml:space="preserve">
     <value>المحتوى</value>
+  </data>
+  <data name="Download Flyer" xml:space="preserve">
+    <value>تحميل النشرة</value>
+  </data>
+  <data name="Download PDF" xml:space="preserve">
+    <value>تحميل PDF</value>
+  </data>
+  <data name="Download Your Certificate" xml:space="preserve">
+    <value>قم بتحميل شهادتك</value>
   </data>
   <data name="Enroll now" xml:space="preserve">
     <value>سجل الان</value>
@@ -142,10 +166,16 @@
     <value>الذهاب الى الكورس</value>
   </data>
   <data name="Home" xml:space="preserve">
-    <value>ألرئيسية</value>
+    <value>الرئيسية</value>
+  </data>
+  <data name="Instructor" xml:space="preserve">
+    <value>الاستاذ</value>
+  </data>
+  <data name="Instructor Performance" xml:space="preserve">
+    <value>أداء المدرب/المدرِّبة</value>
   </data>
   <data name="Instructors" xml:space="preserve">
-    <value>المعلم</value>
+    <value>الاستاذ</value>
   </data>
   <data name="lectures" xml:space="preserve">
     <value>محاضرات</value>
@@ -159,6 +189,9 @@
   <data name="NEW" xml:space="preserve">
     <value>جديد</value>
   </data>
+  <data name="Outcome Achievement" xml:space="preserve">
+    <value>تحقيق النتائج</value>
+  </data>
   <data name="Overview" xml:space="preserve">
     <value>ملخص</value>
   </data>
@@ -168,16 +201,34 @@
   <data name="Prerequisite" xml:space="preserve">
     <value>المتطلبات المسبقة</value>
   </data>
+  <data name="Rate The Course" xml:space="preserve">
+    <value>قيِّم الدورة</value>
+  </data>
   <data name="Reviews" xml:space="preserve">
     <value>التقيمات</value>
   </data>
   <data name="Show more" xml:space="preserve">
     <value>أظهر المزيد</value>
   </data>
+  <data name="Student feedback" xml:space="preserve">
+    <value>تقييم الطلاب</value>
+  </data>
+  <data name="Submit" xml:space="preserve">
+    <value>إرسال</value>
+  </data>
+  <data name="Submit Rating" xml:space="preserve">
+    <value>إرسال التقييم</value>
+  </data>
   <data name="What you'll learn" xml:space="preserve">
     <value>ماذا ستتعلم</value>
   </data>
   <data name="Yes" xml:space="preserve">
     <value>نعم</value>
+  </data>
+  <data name="You Enrolled in This course at" xml:space="preserve">
+    <value>لقد قمت بالتسجيل في هذه الدورة في</value>
+  </data>
+  <data name="You Need to Finish The Course First" xml:space="preserve">
+    <value>يجب عليك إنهاء الدورة أولاً</value>
   </data>
 </root>

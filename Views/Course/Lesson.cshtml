@@ -2,22 +2,75 @@
 @using System.Security.Claims;
 @model LMS.Models.ViewModel.LessonViewModel
 @using Microsoft.AspNetCore.Mvc.Localization;
+@using LMS.Extensions
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
 @inject IViewLocalizer Localizer
 @{
     // Get the current culture
     var culture = System.Threading.Thread.CurrentThread.CurrentCulture.Name;
+
+    // Set layout based on culture
+    if (culture == "ar-SA")
+    {
+        Layout = "_LessonLayoutarabic";
+    }
+    else
+    {
+        Layout = "_lessonlayout";
+    }
 }
 
-<section class="lesson-image ">
-    <div class="relative pt-40" style="margin-top:3rem;">
-        <div class=" d-flex justify-center items-center">
+<link href="/css/pdf-viewer.css" rel="stylesheet" type="text/css" />
+<script src="/js//pdf.js"></script>
+<script src="/js/pdf-viewer.min.js"></script>
+
+
+
+
+<section class="lesson-image responsive-section" id="lesson-image">
+    <div class="relative pt-40" style="margin-top: 3rem;">
+        <div class="d-flex justify-center items-center">
             <div class="youtube-container">
                 <iframe id="youtube-iframe" width="1450" height="800" class="w-full h-full js-gallery" data-gallery="gallery1"></iframe>
             </div>
         </div>
     </div>
 </section>
+
+<section class="lesson-image responsive-section" id="lesson-pdf" style="display: none;">
+    <div class="relative pt-40" style="margin-top: 3rem;">
+        <div class="d-flex justify-center items-center">
+            <div class="pdf-container youtube-container">
+                <embed id="pdf-iframe" src="\CourseFlyer\5fac0a4a-85a1-431e-95db-68921ac4f274.pdf" class="w-full h-full js-gallery"  height="800" width="1450">
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    function resizeIframe() {
+        const sections = document.querySelectorAll(".responsive-section");
+
+        sections.forEach(section => {
+            const iframe = section.querySelector('iframe, embed'); // Select either iframe or embed
+            const aspectRatio = 9 / 16; // 16:9 aspect ratio
+
+            const newWidth = section.offsetWidth;
+            const newHeight = newWidth * aspectRatio;
+
+            iframe.style.width = newWidth + "px";
+            iframe.style.height = newHeight + "px";
+        });
+    }
+
+    window.onload = function () {
+        resizeIframe(); // Set initial size
+        window.addEventListener("resize", resizeIframe);
+    };
+</script>
+
 
 
 <div class="d-flex flex-column">
@@ -62,7 +115,7 @@
                         @if (culture == "ar-SA")
                         {
                             <div class="accordion__button py-20 px-30 bg-light-4" style="direction:rtl;">
-                                <span class="text-17 fw-500 text-dark-1">@chapter.Name</span>
+                                <a class="text-17 fw-500 text-dark-1">@chapter.Name</a>
 
                                 <div class="d-flex items-center">
                                     <div class="accordion__icon">
@@ -83,7 +136,7 @@
                                         <div class="icon" data-feather="chevron-up"></div>
                                     </div>
 
-                                    <span class="text-17 fw-500 text-dark-1">@chapter.Name</span>
+                                    <a class="text-17 fw-500 text-dark-1">@chapter.Name</a>
 
                                 </div>
                             </div>
@@ -105,44 +158,86 @@
                                         {
                                             <div class="" style="direction:rtl;">
                                                 <div class="d-flex">
-
-
-
-                                                    <div class="">
-                                                        <div class="content-title text-purple-1 underline" data-duration="@content.Duration" data-youtube-id="@videoId" data-description="@content.Description" onclick="changeIconColor(event, this, '@content.Description', '@videoId')">
-                                                            @content.Title
-                                                        </div>
-                                                        <div class="d-flex x-gap-20 items-center pt-5">
-                                                            <a class="text-14 lh-1 text-purple-1 underline">@content.Duration دقيقة</a>
-                                                            <input type="checkbox" class="content-checkbox" data-content-id="@content.Id" disabled />
-
-                                                        </div>
-                                                    </div>
-                                                    <div class="d-flex justify-center items-center size-30 rounded-full bg-purple-3 mr-10">
+                                                    <div style="margin-left: 15px;" class=" d-flex justify-center items-center size-30 rounded-full bg-purple-3 ">
                                                         <div class="icon-play text-9" id="icon-play"></div>
+                                                    </div>
+                                                    <div class="accordion__button">
+
+                                                        @if (FileExtensions.HasPdfExtension(content.FilePath))
+                                                        {
+                                                            <a style="margin-left:8px;" href="javascript:void(0)" class="content-title text-purple-1 click" data-duration="@content.Duration" data-youtube-id="" data-description="@content.Description" data-pdf-path="@content.FilePath" onclick="changeIconColor(event, this, '@content.Description', '', '@content.Duration', '@content.Id');  showPdfSection(this);">
+                                                                @content.Title (PDF)
+                                                            </a>
+                                                        }
+                                                        else
+                                                        {
+                                                            <a style="margin-left:8px;" href="#" class="content-title text-purple-1 click" data-duration="@content.Duration" data-youtube-id="@videoId" data-description="@content.Description" onclick="changeIconColor(event, this, '@content.Description', '@videoId', '@content.Duration', '@content.Id'); toggleYouTubeSection()">
+                                                                @content.Title
+                                                            </a>
+                                                        }
+
+                                                        <div class="d-flex x-gap-20 items-centerz " >
+                                                            <a class="text-14 lh-1 text-purple-1 mt-2 underline">@content.Duration دقيقة</a>
+
+                                                            <div  class="course-content-container.@content.Id">
+                                                                <!-- Your content here. This is where the check mark will be appended if the AJAX request is successful or if IsCompleted is true -->
+                                                                @if (content.courseComplete != null && content.courseComplete.IsCompleted == true)
+                                                                {
+                                                                    <i class="fa-solid fa-check mt-2 course-complete-check.@content.Id"></i>
+                                                                }
+                                                            </div>
+
+
+
+                                                        </div>
+
+                                                        
                                                     </div>
                                                 </div>
                                             </div>
+
+
                                         }
                                         else
                                         {
+
                                             <div class="">
                                                 <div class="d-flex">
                                                     <div class="d-flex justify-center items-center size-30 rounded-full bg-purple-3 mr-10">
                                                         <div class="icon-play text-9" id="icon-play"></div>
                                                     </div>
+                                                    <div class="accordion__button">
+                                                        @if (FileExtensions.HasPdfExtension(content.FilePath))
+                                                        {
+                                                            <a href="javascript:void(0)" class="content-title text-purple-1 click" data-duration="@content.Duration" data-youtube-id="" data-description="@content.Description" data-pdf-path="@content.FilePath" onclick="changeIconColor(event, this, '@content.Description', '', '@content.Duration', '@content.Id');  showPdfSection(this);">
+                                                                @content.Title (PDF)
+                                                            </a>
+                                                        }
+                                                        else
+                                                        {
+                                                            <a href="#" class="content-title text-purple-1 click" data-duration="@content.Duration" data-youtube-id="@videoId" data-description="@content.Description" onclick="changeIconColor(event, this, '@content.Description', '@videoId', '@content.Duration', '@content.Id'); toggleYouTubeSection()">
+                                                                @content.Title
+                                                            </a>
+                                                        }
+
+                                                        <div class="d-flex x-gap-20 items-centerz ">
+                                                            <a class="text-14 lh-1 text-purple-1 mt-2 underline">@content.Duration min</a>
+
+                                                            <div class="course-content-container.@content.Id">
+                                                                <!-- Your content here. This is where the check mark will be appended if the AJAX request is successful or if IsCompleted is true -->
+                                                                @if (content.courseComplete != null && content.courseComplete.IsCompleted == true)
+                                                                {
+                                                                    <i class="fa-solid fa-check mt-2 course-complete-check.@content.Id" style="display: inline-block;"></i>
+                                                                }
+                                                            </div>
 
 
-                                                    <div class="">
-                                                        <div class="content-title text-purple-1 underline" data-duration="@content.Duration" data-youtube-id="@videoId" data-description="@content.Description" onclick="changeIconColor(event, this, '@content.Description', '@videoId')">@content.Title</div>
-                                                        <div class="d-flex x-gap-20 items-center pt-5">
-                                                            <a class="text-14 lh-1 text-purple-1 underline">@content.Duration min</a>
-                                                            <input type="checkbox" class="content-checkbox" data-content-id="@content.Id" disabled />
 
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
+
                                         }
                                     }
 
@@ -155,14 +250,19 @@
             </div>
         </div>
 
-
     </aside>
 </div>
-
+z
 <script>
     $(window).on('load', function () {
         showCourseIntroductionVideo();
+        resizeIframe(); // Set initial size
+        window.addEventListener("resize", resizeIframe);
     });
+
+
+
+
 
     function showCourseIntroductionVideo() {
         var defaultVideoUrl = '@Model.Course.CourseIntroductionVideo';
@@ -180,8 +280,13 @@
     }
 
     var lastClickedIcon = null;
-    function changeIconColor(event, element, description, videoId) {
+
+    var timerId;
+    function changeIconColor(event, element, description, videoId, duration, contentId) {
         event.stopPropagation(); // Prevent click event propagation
+        // console.log(description);
+        //console.log(duration);
+        console.log(contentId);
 
         // If there was a previously clicked icon, reset its color
         if (lastClickedIcon) {
@@ -191,7 +296,7 @@
         // Find the icon related to the clicked element
         var icon = element.parentElement.parentElement.querySelector('.icon-play');
 
-        // If the icon is found, change its color and remember it as the lastclicked icon
+        // If the icon is found, change its color and remember it as the last clicked icon
         if (icon) {
             icon.classList.remove('text-9');
             lastClickedIcon = icon;
@@ -208,4 +313,96 @@
             var embeddedUrl = "https://www.youtube.com/embed/" + videoId;
             document.getElementById('youtube-iframe').src = embeddedUrl;
         }
-    }</script>
+
+        var halfDuration = parseInt(duration) * 30 * 1000;
+        console.log(halfDuration);
+
+        // Reset the previous timer if exists
+        if (timerId) {
+            clearInterval(timerId);
+        }
+
+        // Start the timer when the user clicks on the content
+        var startTime = new Date().getTime();
+
+        timerId = setInterval(function () {
+            var currentTime = new Date().getTime();
+            var elapsedTime = currentTime - startTime;
+
+            if (elapsedTime >= halfDuration) {
+                clearInterval(timerId);
+
+                // Send the AJAX request to mark the content as completed
+                markContentComplete();
+            }
+        }, 1000);
+
+
+        // ajax request
+        function markContentComplete() {
+            $.ajax({
+                type: "POST",
+                url: "/Course/MarkCourseContentComplete",
+                data: {
+                    contentId: contentId,
+                    isCompleted: true
+
+                },
+                success: function (response) {
+                   
+                    toastr.success('Half Course Finished')
+
+                },
+                error: function (xhr, status, error) {
+                    // Handle the error response if needed
+                    console.log(xhr);
+                    console.log(status);
+                    console.log(error);
+                }
+            });
+        }
+    }
+
+
+
+</script>
+
+
+<script>
+    function toggleYouTubeSection() {
+        var youtubeSection = document.getElementById("lesson-image");
+        var pdfSection = document.getElementById("lesson-pdf");
+
+        youtubeSection.style.display = "block";
+        pdfSection.style.display = "none";
+
+        resizeIframe();  // Call resize function after changing visibility
+    }
+
+    function showPdfSection(element) {
+        var youtubeSection = document.getElementById("lesson-image");
+        var pdfSection = document.getElementById("lesson-pdf");
+        var pdfPath = element.getAttribute("data-pdf-path");
+
+        youtubeSection.style.display = "none";
+        pdfSection.style.display = "block";
+
+        var pdfIframe = document.getElementById("pdf-iframe");
+        pdfIframe.setAttribute("src", pdfPath);
+
+        resizeIframe();  // Call resize function after changing visibility
+    }
+</script>
+
+
+
+
+
+
+
+<style>
+
+    .content-link:hover {
+        cursor: pointer !important;
+    }
+</style>

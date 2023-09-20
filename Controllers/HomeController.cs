@@ -6,10 +6,12 @@ using LMS.Models.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 using System.Diagnostics;
+using System.Globalization;
 
 namespace LMS.Controllers
 {
@@ -17,16 +19,18 @@ namespace LMS.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly ApplicationDbContext _dbContext;
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly SignInManager<IdentityUser> _signInManager;
         
-        public HomeController(ILogger<HomeController> logger, ApplicationDbContext dbContext, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        public HomeController(ILogger<HomeController> logger, ApplicationDbContext dbContext, UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
         {
             _logger = logger;
             _dbContext = dbContext;
             _userManager = userManager;
             _signInManager = signInManager;
         }
+
+      
 
         public IActionResult Index()
         {
@@ -38,7 +42,7 @@ namespace LMS.Controllers
                 CourseCountPerCategory = _dbContext.CourseCategories.ToDictionary(
                     category => category.Id,
                     category => _dbContext.Courses.Count(course => course.CourseCategoryId == category.Id)),
-                Coursesingle = _dbContext.Courses.Include(c => c.ApplicationUser).FirstOrDefault(),
+                Coursesingle = _dbContext.Courses.Include(c => c.InstructorUsers).FirstOrDefault(),
                 CourseRatings = _dbContext.CourseRating.ToList(),
                 CourseChapterContents = _dbContext.CourseChapterContent
                 .Include(c => c.courseChapter)
@@ -48,7 +52,7 @@ namespace LMS.Controllers
 
             double averageScore = CommonUsed.CalculateAverageScore(viewModel.CourseRatings);
 
-            ViewBag.AverageScore = averageScore;
+            ViewBag.AverageScore = @Math.Round(averageScore, 1);
             return View(viewModel);
         }
         public IActionResult Notfound(int? statusCode)
@@ -86,33 +90,14 @@ namespace LMS.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admins")]
 
         public IActionResult AdminPanel()
         {
             return View();
         }
 
-        public JsonResult Data()
-        {
-
-            var viewModel = new HomeViewModel
-            {
-                //    enrollments = _dbContext.Enrollments.ToList(),
-                //     CourseCategories = _dbContext.CourseCategories.ToList(),
-                Courses = _dbContext.Courses.Include(c => c.CourseCategory).ToList(),
-                //  CourseCountPerCategory = _dbContext.CourseCategories.ToDictionary(
-                //     category => category.Id,
-                //      category => _dbContext.Courses.Count(course => course.CourseCategoryId == category.Id)),
-                //     Coursesingle = _dbContext.Courses.FirstOrDefault(),
-                //    CourseRatings = _dbContext.CourseRating.ToList(),
-                //    CourseChapterContents = _dbContext.CourseChapterContent
-                //     .Include(c => c.courseChapter)
-                //     .ThenInclude(cc => cc.Course)
-                //     .ToList()
-            };
-            return Json(viewModel);
-        }
+       
 
     }
 }

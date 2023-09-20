@@ -4,10 +4,9 @@
 
     Layout = "AdminLayout";
 
-   
+
 
 }
-
 
 
 <h1>Create New Course </h1>
@@ -34,12 +33,36 @@
             </div>
             <div class="form-group">
                 <label asp-for="Tags" class="control-label"></label>
-                <input asp-for="Tags" id="tags-input" class="form-control">
+                <input asp-for="Tags" id="tags-input" class="form-control" placeholder="Enter tags and separate by comma or space...">
                 <span asp-validation-for="Tags" class="text-danger"></span>
-                <span id="word-count" class="text-info"></span>
+                <div class="tags-container"></div>
             </div>
 
-            
+            <script>
+                $(document).ready(function () {
+                    $('#tags-input').on('keyup', function (event) {
+                        if (event.keyCode === 188 || event.keyCode === 32) { // Comma or Space key
+                            const tagInput = $(this);
+                            const tagsContainer = $(".tags-container");
+                            let tagValue = tagInput.val().trim().replace(/,/g, ''); // remove commas
+
+                            if (tagValue !== "") {
+                                // append the new tag to the tags container
+                                tagsContainer.append(`<span class="tag">${tagValue}--</span>`);
+                                tagInput.val("");
+                            }
+                        }
+                    });
+
+                    // Event handler to remove tags when clicked
+                    $(document).on('click', '.tag', function () {
+                        $(this).remove(); // remove the tag
+                    });
+                });
+            </script>
+
+
+
             <div class="form-group">
                 <label asp-for="CourseCategoryId" class="control-label"></label>
                 <select asp-for="CourseCategoryId" asp-items="@(new SelectList(ViewBag.CourseCategoryOptions, "Id", "CombinedName"))" class="form-control"></select>
@@ -57,22 +80,47 @@
                 <input asp-for="CourseEndingDate" class="form-control" type="date" />
                 <span asp-validation-for="CourseEndingDate" class="text-danger"></span>
             </div>
-           
+
             <div class="form-group">
                 <label asp-for="CourseIntroductionVideo" class="control-label"></label>
                 <input asp-for="CourseIntroductionVideo" class="form-control">
                 <span asp-validation-for="CourseIntroductionVideo" class="text-danger"></span>
             </div>
+
+
             <div class="form-group">
-                <label asp-for="CourseFlyer" class="control-label"></label>
-                <input type="file" name="courseFlyerFile" class="form-control" />
-                </div>
-                <div class="form-group">
-                    <label asp-for="CoursePdfFile" class="control-label"></label>
-                    <input type="file" name="coursePdfFile" class="form-control" />
-                </div>
-          
-          
+                <label asp-for="CourseFlyer" class="control-label">Course Flyer (Images only)</label>
+                <input type="file" name="courseFlyerFile" class="form-control" accept="image/*" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="CoursePdfFile" class="control-label">Course PDF File (PDFs only)</label>
+                <input type="file" name="coursePdfFile" class="form-control" accept="application/pdf" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="CertificateType" class="control-label">Certificate Type</label>
+                <select asp-for="CertificateType" class="form-control">
+                    <option value="">-- Level --</option>
+
+                    <option value="Paid">Paid</option>
+                    <option value="Free">Free</option>
+                    <option value="NoCertificate">No Certificate</option>
+                </select>
+            </div>
+
+
+            <div class="form-group">
+                <label asp-for="Level" class="control-label"></label>
+                <select asp-for="Level" class="form-control">
+                    <option value="">-- Level --</option>
+                    <option value="Easy">Easy</option>
+                    <option value="Mid">Mid</option>
+                    <option value="Hard">Hard</option>
+                </select>
+                <span asp-validation-for="Level" class="text-danger"></span>
+            </div>
+
             <div class="form-group">
                 <label asp-for="IsAdminApproved">IsAdminApproved</label>
                 <input asp-for="IsAdminApproved" type="checkbox" class="toggle-checkbox" readonly />
@@ -92,7 +140,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="IsPaid">Is Course Paid?</label>
-                <input asp-for="IsPaid" type="checkbox" id="toggle-checkbox" />
+                <input asp-for="IsPaid" type="checkbox" id="toggle-checkbox"  />
             </div>
             <div class="form-group" id="feeGroup" style="display:none;">
                 <label asp-for="Fee" class="control-label"></label>
@@ -135,7 +183,7 @@
                 </select>
                 <span asp-validation-for="Language" class="text-danger"></span>
             </div>
-           
+
             <div class="form-group">
                 <label asp-for="IsPreRecorded"></label>
                 <input asp-for="IsPreRecorded" type="checkbox" class="toggle-checkbox" readonly />
@@ -166,26 +214,19 @@
                 <button type="submit" class="btn btn-primary mt-3">Create</button>
                 <a asp-action="Index" class="btn btn-secondary mt-3">Cancel</a>
             </div>
-            </form>
+        </form>
     </div>
 </div>
 
 
 
-
 <script>
-    $(document).ready(function () {
-        $('#tags-input').on('input', function () {
-            var words = $(this).val().split(' ');
-            $('#word-count').text('Word count: ' + words.length);
-        });
+    document.addEventListener("DOMContentLoaded", function () {
+        var toggleCheckbox = document.getElementById("toggle-checkbox");
+        var feeGroup = document.getElementById("feeGroup");
 
-        $('#toggle-checkbox').change(function () {
-            if (this.checked) {
-                $("#feeGroup").show();
-            } else {
-                $("#feeGroup").hide();
-            }
+        toggleCheckbox.addEventListener("change", function () {
+            feeGroup.style.display = toggleCheckbox.checked ? "block" : "none";
         });
     });
 </script>

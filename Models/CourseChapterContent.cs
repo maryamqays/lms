@@ -25,7 +25,8 @@ namespace Lms.Models
         [Display(Name = "Course Chapter Content Description ")]
         public string Description { get; set; }
 
-
+        public string CourseCompleteId { get; set; }
+        public CourseComplete courseComplete { get; set; }
 
         [Required(ErrorMessage = "required Indx ")]
         [Display(Name = "Course chapter Content position (Indx) ")]

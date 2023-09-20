@@ -11,8 +11,6 @@ namespace Lms.Models
 
         [Display(Name = "User")]
         public string ApplicationUserId { get; set; }
-        [ForeignKey("ApplicationUserId")]
-        public IdentityUser ApplicationUser { get; set; }
 
         [Display(Name = "Course")]
         public int CourseId { get; set; }

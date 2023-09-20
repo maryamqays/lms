@@ -1,0 +1,167 @@
+﻿@using Microsoft.AspNetCore.Identity;
+@using System.Security.Claims;
+
+@inject UserManager<IdentityUser> UserManager
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Permissions-Policy" content="interest-cohort=()">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Lms</title>
+    <script src="https://kit.fontawesome.com/8454d5fb35.js" crossorigin="anonymous"></script>
+    <!-- Google fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin="" />
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+    <link rel="stylesheet" href="~/css/vendors.css">
+    <link rel="stylesheet" href="~/css/main.css">
+
+
+</head>
+
+
+<body class="preloader-visible" data-barba="wrapper">
+    <!-- preloader start -->
+    <div class="preloader js-preloader">
+        <div class="preloader__bg"></div>
+    </div>
+    <!-- preloader end -->
+    <main class="main-content">
+        <header data-anim="fade" data-add-bg="bg-dark-1" class="header -type-1 js-header">
+
+            <div class="header__container">
+                <div class="row justify-between items-center">
+
+                    <div class="col-auto">
+                        <div class="header-left">
+
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <div class="nav-item align-items-center">
+
+                                    <a style="margin-right:16px;" href="@Url.Action("SetLanguage", "Language", new { culture = "en-US", returnUrl = Url.Action("Index", "Home") })">English</a>
+                                </div>
+                                @if (User.IsInRole("Instructor"))
+                                {
+                                    <a href="/InstructorUser/edit/@Context.User.FindFirstValue(ClaimTypes.NameIdentifier)">
+                                        <i class="fa-solid fa-user"></i>
+                                    </a>
+                                }
+                                <a href="/login/logout" class="button -sm -white text-dark-1 ml-30">الخروج</a>
+
+                            }
+                            else
+                            {
+                                <div class="nav-item align-items-center">
+
+                                    <a style="margin-right:16px;" href="@Url.Action("SetLanguage", "Language", new { culture = "en-US", returnUrl = Url.Action("Index", "Home") })">English</a>
+                                </div>
+                                <div class="header-right__buttons d-flex items-center  md:d-none">
+                                    <a href="/identity/account/register" class="button -sm -white text-dark-1 ml-30">تسجل الدخول</a>
+                                </div>
+
+                            }
+
+                        </div>
+                    </div>
+
+
+                    <div class="header-menu js-mobile-menu-toggle   ">
+                        <div class="header-menu__content">
+                            <div class="mobile-bg "></div>
+
+                            <div class="menu js-navList ">
+                                <div class="menu__nav text-white -is-active" style="list-style-type: none;">
+                                    <div class="">
+                                        <a href="/home/contact">تواصل معنا</a>
+                                    </div>
+                                    <div class="">
+                                        <a href="/home/aboutus">عنا</a>
+                                    </div>
+                                    <div class="">
+                                        <a href="/course">الكورسات</a>
+                                    </div>
+                                    <div class="">
+                                        <a href="/">الرئيسية</a>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                        </div>
+
+
+
+                    </div>
+
+
+                    <div class="col-auto">
+                        <div class="header-right d-flex items-center">
+                            <div class="header-right__icons text-white d-flex items-center">
+                                <div class="header__logo ">
+                                    <a data-barba href="/">
+                                        <img src="/logoimam.png" height="150" width="150" alt="logo">
+                                    </a>
+
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        @RenderBody()
+
+
+    </main>
+    <script src="https://cdn.tiny.cloud/1/o74121qe2vgwn9rjx841hktrbt307eji8apqa3vaqtlkjcz4/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+    <script src="/js/vendors.js"></script>
+    <script src="/js/main.js"></script>
+
+    <script>
+        tinymce.init({
+            selector: 'textarea',
+            plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
+            toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat | numlist bullist',
+            lists_indent_on_tab: false
+
+        });
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
+<style>
+
+
+    @@font-face {
+        font-family: 'Janna LT Bold';
+        src: url('/Janna LT Bold.ttf') format('truetype');
+        font-weight: bold;
+        font-style: normal;
+    }
+
+    body {
+        font-family: 'Janna LT Bold';
+    }
+
+</style>

@@ -129,8 +129,14 @@
   <data name="Career" xml:space="preserve">
     <value>حياتك المهنية</value>
   </data>
+  <data name="corresponds to &quot;Five-star course reviews." xml:space="preserve">
+    <value>مراجعات الدورات ذات الخمس نجوم</value>
+  </data>
   <data name="Courses" xml:space="preserve">
     <value>كورسات</value>
+  </data>
+  <data name="DR SAIF" xml:space="preserve">
+    <value>دكتور سيف</value>
   </data>
   <data name="Drive your" xml:space="preserve">
     <value>قيادة </value>
@@ -147,11 +153,17 @@
   <data name="Find the right instructor for you" xml:space="preserve">
     <value>ابحث عن المدرب المناسب لك</value>
   </data>
+  <data name="Five-star course reviews" xml:space="preserve">
+    <value>مراجعات الدورات ذات الخمس نجوم</value>
+  </data>
   <data name="Free online courses from the world’s leading experts" xml:space="preserve">
     <value>دورات مجانية عبر الإنترنت من كبار الخبراء في العالم</value>
   </data>
   <data name="How it works?" xml:space="preserve">
     <value>ألية العمل</value>
+  </data>
+  <data name="It is no exaggeration to say this Educrat experience was transformative–both professionally and personally. This workshop will long remain a high point of my life." xml:space="preserve">
+    <value>"لا مبالغة في القول عندما أقول إن تجربة Educrat كانت تحوّلية - سواء من الناحية المهنية أو الشخصية. ستبقى هذه الورشة ذكرى جميلة في حياتي لفترة طويلة."</value>
   </data>
   <data name="Join" xml:space="preserve">
     <value>انضم الى</value>
@@ -174,11 +186,26 @@
   <data name="Online courses" xml:space="preserve">
     <value>دروس مباشرة على الإنترنت</value>
   </data>
+  <data name="Product Manager, Apple Inc" xml:space="preserve">
+    <value>مدير المنتجات، شركة أبل</value>
+  </data>
   <data name="Purchase quickly and securely." xml:space="preserve">
     <value>الشراء بسرعة وأمان.</value>
   </data>
   <data name="Recent Courses" xml:space="preserve">
     <value>اخر الكورسات</value>
+  </data>
+  <data name="School Achievements" xml:space="preserve">
+    <value>إنجازات المدرسة</value>
+  </data>
+  <data name="Students community" xml:space="preserve">
+    <value>مجتمع الطلاب</value>
+  </data>
+  <data name="Students worldwide" xml:space="preserve">
+    <value>طلاب من جميع أنحاء العالم</value>
+  </data>
+  <data name="Testimonials" xml:space="preserve">
+    <value>الشهادات</value>
   </data>
   <data name="That’s it! Start learning right away." xml:space="preserve">
     <value>هذا كل شيء! ابدأ التعلم على الفور.</value>
@@ -189,10 +216,16 @@
   <data name="Top courses" xml:space="preserve">
     <value>اهم الكورسات</value>
   </data>
+  <data name="Total course views" xml:space="preserve">
+    <value>إجمالي مشاهدات الدورات</value>
+  </data>
   <data name="unique online course list designs" xml:space="preserve">
     <value>تصميمات فريدة لقائمة الدورات التدريبية عبر الإنترنت</value>
   </data>
   <data name="Welcome" xml:space="preserve">
     <value>اهلا</value>
+  </data>
+  <data name="What will you learn" xml:space="preserve">
+    <value>ما ستتعلمه</value>
   </data>
 </root>

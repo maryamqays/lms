@@ -1,0 +1,69 @@
+﻿@model List<Lms.Models.Course>
+@{
+
+    Layout = "AdminLayout";
+}
+<h1>Course Chapters</h1>
+<hr />
+<div class="d-flex">
+    <p class="mr-3">
+        <a class="btn btn-primary text-white mb-5" href="/course/create">Create New Course</a>
+    </p>
+
+    @if (User.IsInRole("Admins"))
+    {
+        <p>
+            <a href="/coursecategory/create" class="btn btn-primary text-white mb-5">Create New Category</a>
+        </p>
+
+
+        <a class="btn btn-primary text-white mb-5 ms-1" href="/users">View all Users </a>
+        
+    }
+</div>
+
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                EnTitle
+            </th>
+            <th>
+                ArTitle
+            </th>
+            <th>
+                CourseIntroductionVideo
+            </th>
+            <th>
+                Course Details
+            </th>
+            <th>
+                
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @item.EnTitle
+                </td>
+                <td>
+                    @item.ArTitle
+                </td>
+                <td>
+                    @item.CourseIntroductionVideo
+                </td>
+                <td>
+                    <a class="btn text-purple-1" href="/Course/Details/@item.Id"> Details page  </a>
+                </td>
+             
+             
+            </tr>
+        }
+    </tbody>
+</table>

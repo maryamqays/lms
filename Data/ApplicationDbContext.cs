@@ -11,10 +11,10 @@ namespace LMS.Data
             : base(options)
         {
         }
-        public DbSet<ApplicationUser> applicationUsers { get; set; }
+        public DbSet<InstructorUser> InstructorUsers { get; set; }
 
 
-
+        public DbSet <Certificate> certificateUsers { get; set; }
         public DbSet<CourseCategory> CourseCategories { get; set; }
 
         public DbSet<Course> Courses { get; set; }

@@ -1,8 +1,15 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+﻿@using Microsoft.AspNetCore.Identity;
+@using System.Security.Claims;
+
+@inject UserManager<IdentityUser> UserManager
+
+<!DOCTYPE html>
+<html>
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <title>@ViewData["Title"] - Lms</title>
     <script src="https://kit.fontawesome.com/8454d5fb35.js" crossorigin="anonymous"></script>
     <!-- Google fonts -->
@@ -12,7 +19,8 @@
 
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin="" />
 
@@ -44,16 +52,12 @@
 
                             <div class="header__logo ">
                                 <a data-barba href="/">
-                                    <img src="/img/general/logo.svg" alt="logo">
-                                   
+                                    <img src="/logoimam.png" height="150" width="150" alt="logo">
+
                                 </a>
-                               
 
 
                             </div>
-
-
-                    
 
                         </div>
                     </div>
@@ -129,42 +133,50 @@
                         <div class="header-right d-flex items-center">
                             <div class="header-right__icons text-white d-flex items-center">
 
-                             
-                            @if (User.Identity.IsAuthenticated)
-                            {
+
+                                @if (User.Identity.IsAuthenticated)
+                                {
                                     <div class="nav-item align-items-center">
-                                        <a class="nav-link d-inline-block text-white" href="?&ui-culture=ar-SA">العربية</a>
-
+                                        <a style="margin-right:16px;" href="@Url.Action("SetLanguage", "Language", new { culture = "ar-SA", returnUrl = Url.Action("Index", "Home") })">العربية</a>
+                                        @if (User.IsInRole("Instructor"))
+                                        {
+                                            <a href="/InstructorUser/edit/@Context.User.FindFirstValue(ClaimTypes.NameIdentifier)">
+                                                <i class="fa-solid fa-user"></i>
+                                            </a>
+                                        }
+                                        @if (User.IsInRole("Admins") || User.IsInRole("Instructor"))
+                                        {
+                                            <a class="ms-3" href="/Course/CourseListInstructor">admin</a>
+                                        }
                                     </div>
-                                    <a href="/identity/account/logout" class="button -sm -white text-dark-1 ml-30">Log out</a>
-                               
-                            }
-                            else
-                            {
+                                    <a href="/login/logout" class="button -sm -white text-dark-1 ml-30">Log out</a>
+
+                                }
+                                else
+                                {
                                     <div class="nav-item align-items-center">
-                                        <a class="nav-link d-inline-block text-white" href="?&ui-culture=ar-SA">العربية</a>
+                                        <a style="margin-right:16px;" href="@Url.Action("SetLanguage", "Language", new { culture = "ar-SA", returnUrl = Url.Action("Index", "Home") })">العربية</a>
 
                                     </div>
-                                    <div class="header-right__buttons d-flex items-center ml-30 md:d-none">
-                                        <a href="/identity/account/login" class="button -underline text-white">Log in</a>
-                                        <a href="/identity/account/register" class="button -sm -white text-dark-1 ml-30">Sign up</a>
+                                    <div class="header-right__buttons d-flex items-center  md:d-none">
+                                        <a href="/login/login" class="button -sm -white text-dark-1 ml-30">Log in</a>
                                     </div>
 
-                            }
+                                }
+                            </div>
                         </div>
-                    </div>
                     </div>
                 </div>
             </div>
         </header>
-    @RenderBody()
+        @RenderBody()
         <footer class="footer -type-1 bg-dark-1 -green-links">
             <div class="container">
                 <div class="footer-header">
                     <div class="row y-gap-20 justify-between items-center">
                         <div class="col-auto">
                             <div class="footer-header__logo">
-                                <img src="/img/general/logo.svg" alt="logo">
+                                <img src="/logoimam.png" height="150" width="150" alt="logo">
                             </div>
                         </div>
                         <div class="col-auto">
@@ -181,7 +193,7 @@
                     </div>
                 </div>
 
-                <div class="footer-columns">
+         @*       <div class="footer-columns">
                     <div class="row y-gap-30">
                         <div class="col-xl-2 col-lg-4 col-md-6">
                             <div class="text-17 fw-500 text-white uppercase mb-25">ABOUT</div>
@@ -246,13 +258,13 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>*@
 
                 <div class="py-30 border-top-light-15">
                     <div class="row justify-between items-center y-gap-20">
                         <div class="col-auto">
                             <div class="d-flex items-center h-100 text-white">
-                                © 2022 Educrat. All Right Reserved.
+                                © 2023 Imam Academy. All Right Reserved.
                             </div>
                         </div>
 
@@ -279,10 +291,8 @@
                 </div>
             </div>
         </footer>
-  </main>
-
-    <script src="https://cdn.tiny.cloud/1/wnz7131xn0vec3u4r9xd1ulg2yldexr3xbwof179ywdyrt6g/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
-
+    </main>
+    <script src="https://cdn.tiny.cloud/1/o74121qe2vgwn9rjx841hktrbt307eji8apqa3vaqtlkjcz4/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
     <script src="/js/vendors.js"></script>
     <script src="/js/main.js"></script>
@@ -296,6 +306,16 @@
 
         });
     </script>
+
+    
+
+
+
+
+
+
+
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

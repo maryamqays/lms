@@ -19,7 +19,7 @@ namespace LMS.Controllers
             _dbContext = dbContext;
             _env = env;
         }
-        [Authorize(Roles = "Admin, Instructor")]
+        [Authorize(Roles = "Admins, Instructors")]
 
         // GET: CourseChapter
         public IActionResult Index()
@@ -30,23 +30,29 @@ namespace LMS.Controllers
         }
 
         // GET: CourseChapter/Create
-        [Authorize(Roles = "Admin, Instructor")]
+        [Authorize(Roles = "Admins, Instructors")]
 
         public IActionResult Create(int courseChapterId)
         {
-            var courseChapters = _dbContext.CourseChapters.Include(cc => cc.Course).ToList();
+            var courseChapter = _dbContext.CourseChapters
+           .Include(cc => cc.Course)
+           .FirstOrDefault(cc => cc.Id == courseChapterId);
 
-            ViewBag.CourseChapters = courseChapters.Select(cc => new SelectListItem
+            if (courseChapter == null)
             {
-                Value = cc.Id.ToString(),
-                Text = $"{cc.Name}/{cc.Course.EnTitle}"
-            }).ToList();
+                // Handle the case when the courseChapterId is not found
+                return NotFound();
+            }
+
             var model = new CourseChapterContent
             {
-                CourseChapterId = courseChapterId
+                CourseChapterId = courseChapterId,
+                courseChapter = courseChapter // Include the CourseChapter entity in the CourseChapterContent model
             };
+
             return View(model);
         }
+    
 
 
 
@@ -54,7 +60,7 @@ namespace LMS.Controllers
         // POST: CourseChapter/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin, Instructor")]
+        [Authorize(Roles = "Admins, Instructors")]
 
         public IActionResult Create(CourseChapterContent content, IFormFile file)
         {
@@ -63,22 +69,22 @@ namespace LMS.Controllers
             if (file != null)
             {
                 string fileName = Guid.NewGuid().ToString();
-                var uploads = Path.Combine(wwwRootPath, @"images");
+                var uploads = Path.Combine(wwwRootPath, @"CourseChapterContentPdf");
                 var extension = Path.GetExtension(file.FileName);
 
                 using (var fileStreams = new FileStream(Path.Combine(uploads, fileName + extension), FileMode.Create))
                 {
                     file.CopyTo(fileStreams);
                 }
-                content.FilePath = @"\images\" + fileName + extension;
+                content.FilePath = @"\CourseChapterContentPdf\" + fileName + extension;
             }
 
             _dbContext.CourseChapterContent.Add(content);
             _dbContext.SaveChanges();
             var courseId = _dbContext.CourseChapters
-       .Include(cc => cc.Course)
-       .FirstOrDefault(cc => cc.Id == content.CourseChapterId)
-       ?.Course?.Id;
+           .Include(cc => cc.Course)
+           .FirstOrDefault(cc => cc.Id == content.CourseChapterId)
+           ?.Course?.Id;
             return RedirectToAction("Details", "Course", new { id = courseId });
         }
 
@@ -87,7 +93,7 @@ namespace LMS.Controllers
 
 
         // GET: CourseChapter/Edit/5
-        [Authorize(Roles = "Admin, Instructor")]
+        [Authorize(Roles = "Admins, Instructors")]
 
         public IActionResult Edit(int? id)
         {
@@ -110,7 +116,7 @@ namespace LMS.Controllers
         // POST: CourseChapter/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin, Instructor")]
+        [Authorize(Roles = "Admins, Instructors")]
 
         public IActionResult Edit(int id, CourseChapterContent content, IFormFile file)
         {
@@ -125,7 +131,7 @@ namespace LMS.Controllers
             if (file != null)
             {
                 string fileName = Guid.NewGuid().ToString();
-                var uploads = Path.Combine(wwwRootPath, @"images");
+                var uploads = Path.Combine(wwwRootPath, @"CourseChapterContentPdf");
                 var extension = Path.GetExtension(file.FileName);
 
                 // Delete the old image file if it exists
@@ -143,26 +149,23 @@ namespace LMS.Controllers
                 {
                     file.CopyTo(fileStreams);
                 }
-                content.FilePath = @"\images\" + fileName + extension;
+                content.FilePath = @"\CourseChapterContentPdf\" + fileName + extension;
             }
 
             _dbContext.CourseChapterContent.Update(content);
             _dbContext.SaveChanges();
             var courseId = _dbContext.CourseChapters
-       .Include(cc => cc.Course)
-       .FirstOrDefault(cc => cc.Id == content.CourseChapterId)
-       ?.Course?.Id;
-            return RedirectToAction("Details", "Course", new { id = courseId });
-        }
-
-
-
+           .Include(cc => cc.Course)
+           .FirstOrDefault(cc => cc.Id == content.CourseChapterId)
+           ?.Course?.Id;
+                return RedirectToAction("Details", "Course", new { id = courseId });
+            }
 
 
         // POST: CourseChapter/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin, Instructor")]
+        [Authorize(Roles = "Admins, Instructors")]
 
         public IActionResult DeleteConfirmed(int id)
         {
@@ -181,9 +184,9 @@ namespace LMS.Controllers
             _dbContext.CourseChapterContent.Remove(content);
             _dbContext.SaveChanges();
             var courseId = _dbContext.CourseChapters
-       .Include(cc => cc.Course)
-       .FirstOrDefault(cc => cc.Id == content.CourseChapterId)
-       ?.Course?.Id;
+           .Include(cc => cc.Course)
+           .FirstOrDefault(cc => cc.Id == content.CourseChapterId)
+           ?.Course?.Id;
             return RedirectToAction("Details", "Course", new { id = courseId });
         }
     }

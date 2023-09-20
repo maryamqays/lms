@@ -139,8 +139,8 @@ namespace Lms.Models
 
 
         [StringLength(450)]
-        public string ApplicationUserId { get; set; }
-        public IdentityUser ApplicationUser { get; set; }
+        public string InstructorUserId { get; set; }
+        public InstructorUser InstructorUsers { get; set; }
 
     }
 

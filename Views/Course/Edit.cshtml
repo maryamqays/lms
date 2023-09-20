@@ -1,10 +1,16 @@
 ﻿@model Lms.Models.Course
+@using Microsoft.AspNetCore.Identity
+
+@inject UserManager<IdentityUser> UserManager
 
 @{
 
     Layout = "AdminLayout";
 }
-
+@if (User.IsInRole("Admins") || Model.InstructorUserId != UserManager.GetUserId(User))
+{
+    <p>This is not your course.</p>
+}
 <h1>Edit New Course </h1>
 
 <hr />
@@ -58,21 +64,28 @@
                 <span asp-validation-for="CourseIntroductionVideo" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="CertificateType" class="control-label">Certificate Type</label>
+                <select asp-for="CertificateType" class="form-control">
+                    <option value="">-- Level --</option>
+
+                    <option value="Paid">Paid</option>
+                    <option value="Free">Free</option>
+                    <option value="NoCertificate">No Certificate</option>
+                </select>
+            </div>
+            <div class="form-group">
                 <label asp-for="CourseFlyer" class="control-label"></label>
-                <input type="text" value="@Model.CourseFlyer" readonly class="form-control" />
+                <input type="text" value="@Model.CourseFlyer" readonly hidden class="form-control" />
                 <input type="hidden" asp-for="CourseFlyer" /> <!-- Add this line -->
-                <input type="file" name="courseFlyerFile" class="form-control" />
+                <input type="file" name="courseFlyerFile" class="form-control" accept="image/*" />
             </div>
             <div class="form-group">
                 <label asp-for="CoursePdfFile" class="control-label"></label>
-                <input type="text" value="@Model.CoursePdfFile" readonly class="form-control" />
+                <input type="text" value="@Model.CoursePdfFile" hidden readonly class="form-control" />
                 <input type="hidden" asp-for="CoursePdfFile" /> <!-- Add this line -->
-                <input type="file" name="coursePdfFile" class="form-control" />
+                <input type="file" name="coursePdfFile" class="form-control" accept="application/pdf" />
             </div>
-            <div class="form-group">
-                <label asp-for="IsPaid">Is Course Paid?</label>
-                <input asp-for="IsPaid" type="checkbox" class="toggle-checkbox" readonly />
-            </div>
+          
             
             <div class="form-group">
                 <label asp-for="IsAdminApproved">IsAdminApproved</label>
@@ -129,10 +142,16 @@
                 <span asp-validation-for="Language" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="IsPaid">Is Course Paid?</label>
+                <input asp-for="IsPaid" type="checkbox" id="toggle-checkbox" checked="false" />
+            </div>
+            <div class="form-group" id="feeGroup" style="display:none;">
                 <label asp-for="Fee" class="control-label"></label>
-                <input asp-for="Fee" class="form-control">
+                <input asp-for="Fee" class="form-control" value="0" />
                 <span asp-validation-for="Fee" class="text-danger"></span>
             </div>
+
+            
             <div class="form-group">
                 <label asp-for="IsPreRecorded"></label>
                 <input asp-for="IsPreRecorded" type="checkbox" class="toggle-checkbox" readonly />
@@ -172,6 +191,17 @@
         $('#tags-input').on('input', function () {
             var words = $(this).val().split(' ');
             $('#word-count').text('Word count: ' + words.length);
+        });
+    });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var toggleCheckbox = document.getElementById("toggle-checkbox");
+        var feeGroup = document.getElementById("feeGroup");
+
+        toggleCheckbox.addEventListener("change", function () {
+            feeGroup.style.display = toggleCheckbox.checked ? "block" : "none";
         });
     });
 </script>

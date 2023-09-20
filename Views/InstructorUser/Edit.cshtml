@@ -1,0 +1,55 @@
+﻿@model LMS.Models.InstructorUser
+@{
+
+    Layout = "AdminLayout";
+
+
+
+}
+<h2>Edit Instructor Profile</h2>
+<hr />
+<form asp-action="Edit" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="UserName" class="control-label">Instructor Name</label>
+        <input type="text" id="UserName" name="UserName" value="@Model.UserName" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label for="ImageUrl" class="control-label">Profile Picture</label>
+        <input type="file" id="ImageUrl" name="file" class="form-control" accept="image/*" onchange="previewImage();" />
+        <input type="text" value="@Model.ImageUrl" readonly class="form-control" hidden />
+    </div>
+    <img id="imagePreview" src="@Model.ImageUrl" alt="Image Preview" style="width: 150px; height: 150px;" />
+
+    <div class="form-group">
+        <label for="Description" class="control-label">Instructor Overview</label>
+        <textarea id="Description" name="Description" class="form-control" maxlength="400">@Model.Description</textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="JobTitle" class="control-label">Job Title</label>
+        <input type="text" id="JobTitle" name="JobTitle" value="@Model.JobTitle" class="form-control" maxlength="100" />
+    </div>
+
+    <div class="form-group">
+        <input type="submit" value="Save" class="btn btn-primary" />
+    </div>
+</form>
+
+<script>
+    function previewImage() {
+        var file = document.getElementById("ImageUrl").files[0];
+        var reader = new FileReader();
+
+        reader.onloadend = function () {
+            document.getElementById("imagePreview").style.display = "block";
+            document.getElementById("imagePreview").src = reader.result;
+        }
+
+        if (file) {
+            reader.readAsDataURL(file);
+        } else {
+            document.getElementById("imagePreview").src = "";
+        }
+    }
+</script>

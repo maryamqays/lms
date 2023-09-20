@@ -1,0 +1,41 @@
+﻿
+@model LMS.Models.ViewModel.LessonViewModel
+@foreach (var comment in Model.courseComments)
+{
+    <div id="updateDiv" class="comments__item-inner md:direction-column mt-4">
+        <div class="comments__img mr-20">
+            <div class="bg-image rounded-full js-lazy" data-bg="/img/avatars/1.png"></div>
+        </div>
+
+        <div class="comments__body md:mt-15">
+            <div class="comments__header">
+                <h4 class="text-17 fw-500 lh-15">
+                    @comment.UserName.Substring(0, comment.UserName.IndexOf('@'))
+                    @{
+                        DateTime currentDate = DateTime.Now.Date; // Get the current date without time
+                        int daysAgo = (currentDate - comment.DateTime.Date).Days;
+                        string timeAgo = daysAgo == 1 ? "1 day ago" : $"{daysAgo} days ago";
+                    }
+
+                    <span class="text-13 text-light-1 fw-400">@timeAgo</span>
+                </h4>
+
+                <div class="stars"></div>
+            </div>
+
+            <div class="comments__text mt-10 ">
+                <p>@comment.Comment</p>
+            </div>
+
+
+        </div>
+
+
+      
+
+
+    </div>
+
+     
+}
+

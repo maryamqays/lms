@@ -1,0 +1,92 @@
+﻿@model LMS.Models.Certificate
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+@{
+    Layout = "AdminLayout";
+}
+<!-- Add PDF.js library -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
+<style>
+    /* Center the button in the middle of the screen */
+    .center-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh; /* This will make the container take the full height of the viewport */
+    }
+
+    /* Increase the button size and keep the background color */
+    .custom-btn {
+        /* Add your custom styles here */
+        width: 200px; /* Set the desired width */
+        height: 90px; /* Set the desired height */
+        font-size: 20px; /* Set the desired font size */
+        background-color: #6440FB; /* Keep the background color */
+        border-color: #6440FB; /* Keep the border color */
+        color: white; /* Keep the text color */
+        padding: 8px 20px; /* Add some padding to the button */
+        cursor: pointer; /* Show a pointer cursor when hovering over the button */
+        /* Add any other styles you want to customize the button */
+    }
+</style>
+
+<div hidden class="container" id="content">
+    <h1>Certificate Details</h1>
+    <hr />
+
+    <p><strong>Id:</strong> @Model.Id</p>
+    <p><strong>Certified Name:</strong> @Model.CertifiedName</p>
+    <p><strong>Course Title:</strong> @Model.Course.EnTitle</p>
+    <p><strong>Date of Certification:</strong> @Model.DateOfCertification.ToString("d")</p>
+    <p><strong>Course Hours:</strong> @Model.CourseHours</p>
+    <p><strong>Number of Downloads:</strong> @Model.DownloadTimes</p>
+</div>
+
+<div class="center-container">
+    <button type="button" class="btn custom-btn mb-3 pb-3" height="" onclick="genPDF()">Download Certificate</button>
+</div>
+<script>
+    function genPDF() {
+        var doc = new jsPDF('landscape');
+
+        // Fetching model values
+        var certifiedName = '@Model.CertifiedName';
+        var courseTitle = '@Model.Course.EnTitle';
+        var courseHours = '@Model.CourseHours';
+
+        // Load the image
+        var img = new Image()
+        img.src = '/cert.jpg'
+        img.onload = function () {
+            // Add the image to the PDF. Adjust the position and size as needed.
+            doc.addImage(this, 'JPEG', 0, 0, doc.internal.pageSize.getWidth(), doc.internal.pageSize.getHeight());
+
+            // Title
+            doc.setFontType("bold");
+            doc.setFontSize(22);
+
+            // Certificate body
+            doc.setFontSize(16);
+            doc.setFontType("normal");
+            doc.text(140, 80, 'This is to Certify That', null, null, 'center');
+            doc.setFontType("bold");
+            doc.text(140, 90, certifiedName, null, null, 'center');
+
+            doc.setFontType("normal");
+            doc.text(140, 100, 'has successfully completed ' + courseHours + ' hours of', null, null, 'center');
+            // Course title on a new line
+            doc.text(140, 110, 'Guide to the ' + courseTitle, null, null, 'center');
+
+            // current date
+            var currentDate = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+            // Date of completion
+            doc.text(140, 120, 'on ' + currentDate, null, null, 'center');
+
+            doc.save('Certificate.pdf');
+        }
+    }
+</script>
+
+

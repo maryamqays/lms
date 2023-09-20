@@ -27,8 +27,8 @@
 
                             <form id="account" method="post" class="contact-form respondForm__form row y-gap-20 pt-30">
                                 <div class="col-12">
-                                    <label class="text-16 lh-1 fw-500 text-dark-1 mb-10">Username Or Email</label>
-                                    <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="Name" />
+                                    <label class="text-16 lh-1 fw-500 text-dark-1 mb-10"> Email</label>
+                                    <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="Email" />
                                     <span asp-validation-for="Input.Email" class="text-danger"></span>
 
                                 </div>
@@ -36,6 +36,7 @@
                                     <label class="text-16 lh-1 fw-500 text-dark-1 mb-10">Password</label>
                                     <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="Password" />
                                     <span asp-validation-for="Input.Password" class="text-danger"></span>
+
 
                                 </div>
                                 <div class="col-12">

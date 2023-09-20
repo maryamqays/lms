@@ -1,4 +1,5 @@
-﻿using Lms.Models;
+﻿using Azure;
+using Lms.Models;
 
 namespace LMS.Models
 {
@@ -27,4 +28,7 @@ namespace LMS.Models
             }
         }
     }
+
+   
+
 }

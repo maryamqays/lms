@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using LMS.Models.ViewModel;
+using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Xml.Linq;
@@ -9,7 +10,7 @@ namespace Lms.Models
     {
         [Key]
         public int Id { get; set; }
-
+        [Required]
         [StringLength(2000, ErrorMessage = "Comment should not be more than 2000 characters")]
         [Display(Name = "Comment")]
         public string Comment { get; set; }
@@ -35,7 +36,13 @@ namespace Lms.Models
 
         [Display(Name = "User")]
         public string ApplicationUserId { get; set; }
-        [ForeignKey("ApplicationUserId")]
-        public IdentityUser ApplicationUser { get; set; }
+       
+        [Display(Name = "Username")]
+        public string UserName { get; set; }
+
+        [Display(Name = "Profile Picture")]
+        public string ProfilePicture { get; set; }
+
+
     }
 }

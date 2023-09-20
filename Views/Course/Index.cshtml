@@ -30,10 +30,18 @@
                 <div class="col-auto">
                     <div class="breadcrumbs__content">
 
-                        <div class="breadcrumbs__item ">
+                        @if(culture=="ar-sa"){
+
+                            <div class="breadcrumbs__item mt-2">
+                                <a href="/">@Localizer["Home"] </a>
+                            </div>
+
+                        }
+                        else{
+                        <div class="breadcrumbs__item " >
                             <a href="/">@Localizer["Home"] </a>
                         </div>
-
+                        }
                         <div class="breadcrumbs__item ">
                             <a href="/Course">@Localizer["Courses"]</a>
                         </div>
@@ -50,18 +58,64 @@
     <section class="page-header -type-1">
         <div class="container">
             <div class="page-header__content">
-                <div class="row">
-                    <div class="col-auto">
-                        <div data-anim="slide-up delay-1">
+                <div class="">
+                    <div class="">
+                        <div data-anim="slide-up delay-1" class="d-flex align-items-center justify-content-between row">
+                            <div class="col-lg-6">
+                                <h1 class="col-auto">@Localizer["Last Courses"]</h1>
+                            </div>
+                            @if (culture == "ar-SA")
+                            {
+                                <div class="col-lg-6 mt-5">
+                                    <form method="get" asp-action="Index" style="width:500px;">
+                                        <div style="display: flex;">
+                                            <input style="flex: 1;" class="form-control mt-2 input-box" type="text" id="searchInput" aria-label="Large" placeholder="ابحث عن اسم الكورس" aria-describedby="inputGroup-sizing-sm">
+                                            <button style="margin-right:8px;"  type="submit" class="btn btn-outline-secondary "> <i class="fas fa-search"></i></button>
+                                        </div>
+                                    </form>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="col-lg-6 mt-5">
+                                    <form method="get" asp-action="Index" style="width:500px;">
+                                        <div style="display: flex;">
+                                            <input style="flex: 1;" class="form-control mt-2 input-box" type="text" id="searchInput" aria-label="Large" placeholder="Search by course title" aria-describedby="inputGroup-sizing-sm">
+                                            <button type="submit" class="btn btn-outline-secondary"> <i class="fas fa-search"></i></button>
+                                        </div>
+                                    </form>
+                                </div>
 
-                            <h1 class="page-header__title">@Localizer["Last Courses"]</h1>
 
+                            }
                         </div>
 
+                        <style>
+                            /* Define the border style for the input box */
+                            .input-box {
+                                border: 2px solid #6f42c1 !important;
+                                padding: 8px; /* Add some padding for better appearance */
+                                font-size: 16px; /* You can adjust the font size as needed */
+                            }
+
+
+                        </style>
+                        <style>
+                            /* Style for the search button */
+                            .btn-outline-secondary {
+                                border-color: #ced4da;
+                                color: #495057;
+                                margin-left: 8px;
+                                margin-top:8px;
+                                height:45px;
+                            }
+
+                           
+                        </style>
+
+
                         <div data-anim="slide-up delay-2">
-
                             <p class="page-header__text">@Localizer["Write an introductory description of the category."]</p>
-
                         </div>
                     </div>
                 </div>
@@ -70,10 +124,12 @@
     </section>
 
 
+
     <section class="layout-pt-md layout-pb-lg">
         <div data-anim="slide-up delay-3" class="container">
             <div class="accordion js-accordion">
                 <div class="accordion__item">
+
                     <div class="row y-gap-20 items-center justify-between pb-30">
                         <div class="col-auto">
                             <div class="text-14 lh-12"> <span class="text-dark-1 fw-500"></span>@Localizer["total results"] </div>
@@ -87,14 +143,20 @@
 
                                         <div class="dropdown js-dropdown js-category-active">
                                             <div class="dropdown__button d-flex items-center text-14 rounded-8 px-20 py-10 text-14 lh-12" data-el-toggle=".js-category-toggle" data-el-toggle-active=".js-category-active">
-                                                <span class="js-dropdown-title">@Localizer["All"]</span>
+                                                <span class="js-dropdown-title">
+                                                    @{
+                                                        string categoryName = Context.Request.Query["categoryname"].FirstOrDefault();
+                                                        string displayCategory = categoryName ?? "All";
+                                                    }
+                                                    @displayCategory
+                                                </span>
                                                 <i class="icon text-9 ml-40 icon-chevron-down"></i>
                                             </div>
 
                                             <div class="toggle-element -dropdown -dark-bg-dark-2 -dark-border-white-10 js-click-dropdown js-category-toggle">
                                                 <div class="text-14 y-gap-15 js-dropdown-list">
                                                     <div>
-                                                        <a href="#" value="all" class="d-block js-dropdown-link">@Localizer["All"]</a>
+                                                        <a href="#" value="@Context.Request.Query["categoryid"]" data-category="@Context.Request.Query["categoryid"]" class="d-block js-dropdown-link"></a>
                                                     </div>
                                                     @foreach (var category in Model.CourseCategories)
                                                     {
@@ -125,13 +187,13 @@
                         </div>
                     </div>
 
-
                 </div>
             </div>
+        
 
 
             <div class="row y-gap-30 justify-center">
-                
+
 
                 @foreach (var course in Model.Courses)
                 {
@@ -166,7 +228,7 @@
                                 var coursecategory = Model.CourseCategories.FirstOrDefault(category => category.Id == course.CourseCategoryId);
 
                             }
-                            @if (culture=="ar-SA")
+                            @if (culture == "ar-SA")
                             {
 
                                 <div class="coursesCard__content pl-20 sm:pl-10 pr-10">
@@ -185,15 +247,15 @@
 
                                         </div>
                                         <div class="text-14 lh-1 text-yellow-1 mr-10">
-                                            @(averageScore > 0 ? averageScore.ToString() : "غير مصنف")
+                                            @(averageScore > 0 ? @Math.Round(averageScore, 1).ToString() : "غير مصنف")
                                         </div>
 
                                         @if (ratingsCount > 0)
                                         {
                                             <div class="text-13 lh-1 ml-10 me-3">(@ratingsCount)</div>
                                         }
-                                       
-                                       
+
+
                                     </div>
 
                                     <div class="text-17 lh-13 fw-500 text-dark-1 mt-10">@course.ArTitle</div>
@@ -240,8 +302,8 @@
 
                                     <div class="d-flex justify-between items-center pt-10 border-top-light">
                                         <div class="d-flex items-center">
-                                            <img src="img/general/avatar-1.png" alt="image">
-                                            <div class="text-light-1 ml-10">دكتور سيف</div>
+                                            <img src="@Model.Coursesingle.InstructorUsers.ImageUrl" style="border-radius:50%" height="30" width="30" alt="image">
+                                            <div class="text-light-1 ml-10">@Model.Coursesingle.InstructorUsers.UserName</div>
                                         </div>
 
                                         <div class="d-flex items-center">
@@ -261,75 +323,90 @@
                             }
 
 
-                            else{
-                            <div class="coursesCard__content pl-20 sm:pl-10 pr-10">
-                                <div class="d-flex items-center">
-                                    <div class="text-14 lh-1 text-yellow-1 mr-10">
-                                        @(averageScore > 0 ? averageScore.ToString() : "Not rated")
-                                    </div>
+                            else
+                            {
+                                <div class="coursesCard__content pl-20 sm:pl-10 pr-10">
+                                    <div class="d-flex items-center">
+                                        <div class="text-14 lh-1 text-yellow-1 mr-10">
+                                            @(averageScore > 0 ? @Math.Round(averageScore, 1).ToString() : "Not rated")
+                                        </div>
 
-                                    <div class="d-flex x-gap-5 items-center">
+                                        <div class="d-flex x-gap-5 items-center">
 
 
-                                        @if (averageScore > 0)
-                                        {
-                                            for (int i = 0; i < (int)averageScore; i++)
+                                            @if (averageScore > 0)
                                             {
-                                                <div class="icon-star text-9 text-yellow-1"></div>
+                                                for (int i = 0; i < (int)averageScore; i++)
+                                                {
+                                                    <div class="icon-star text-9 text-yellow-1"></div>
+                                                }
                                             }
+
+
+                                        </div>
+                                        @if (ratingsCount > 0)
+                                        {
+                                            <div class="text-13 lh-1 ml-10">(@ratingsCount)</div>
                                         }
-
-
                                     </div>
-                                    @if (ratingsCount > 0)
+
+                                    <div class="text-17 lh-13 fw-500 text-dark-1 mt-10">@course.EnTitle</div>
+
+                                    @if (course.EnTitle.Length < 35)
                                     {
-                                        <div class="text-13 lh-1 ml-10">(@ratingsCount)</div>
+                                        <br>
                                     }
-                                </div>
+                                    <div class="d-flex x-gap-15 items-center py-10">
 
-                                <div class="text-17 lh-13 fw-500 text-dark-1 mt-10">@course.EnTitle</div>
-
-                                @if (course.EnTitle.Length < 35)
-                                {
-                                    <br>
-                                }
-                                <div class="d-flex x-gap-15 items-center py-10">
-
-                                    <div class="d-flex items-center">
-                                        <div class="mr-8">
-                                            <i class="fas fa-book mt-1"></i>
+                                        <div class="d-flex items-center">
+                                            <div class="mr-8">
+                                                <i class="fas fa-book mt-1"></i>
+                                            </div>
+                                            <div class="text-14 lh-1">@coursecategory.EnName</div>
                                         </div>
-                                        <div class="text-14 lh-1">@coursecategory.EnName</div>
-                                    </div>
 
-                                    <div class="d-flex items-center">
-                                        <div class="mr-10">
-                                            <img src="img/coursesCards/icons/1.svg" alt="icon">
+                                        <div class="d-flex items-center">
+                                            <div class="mr-10">
+                                                <img src="img/coursesCards/icons/1.svg" alt="icon">
+                                            </div>
+                                            <div class="text-14 lh-1 text-light-1">@Model.CourseChapterContents.Where(c => c.courseChapter.courseId == course.Id).Count() lesson</div>
                                         </div>
-                                        <div class="text-14 lh-1 text-light-1">@Model.CourseChapterContents.Where(c => c.courseChapter.courseId == course.Id).Count() lesson</div>
-                                    </div>
 
-                                    <div class="d-flex items-center">
-                                        <div class="mr-10">
-                                            <img src="img/coursesCards/icons/2.svg" alt="icon">
+                                        <div class="d-flex items-center">
+                                            <div class="mr-10">
+                                                <img src="img/coursesCards/icons/2.svg" alt="icon">
+                                            </div>
+                                            @{
+                                                int totalDurationInMinutes = totalDurations;
+                                                int hours = totalDurationInMinutes / 60;
+                                                double remainingMinutes = totalDurationInMinutes % 60;
+                                                double totalDurationInHours = hours + (remainingMinutes / 60.0);
+                                            }
+
+                                            @if (totalDurationInMinutes < 60)
+                                            {
+                                                <div class="text-14 lh-1 text-light-1">@totalDurationInMinutes Minutes</div>
+                                            }
+                                            else
+                                            {
+                                                <div class="text-14 lh-1 text-light-1">@totalDurationInHours.ToString("0.0") Hours</div>
+                                            }
                                         </div>
-                                        <div class="text-14 lh-1 text-light-1">@(totalDurations/60) Hours</div>
-                                    </div>
 
-                                    <div class="d-flex items-center">
-                                        <div class="mr-10">
-                                            <img src="img/coursesCards/icons/3.svg" alt="icon">
+                                        <div class="d-flex items-center">
+                                            <div class="mr-10">
+                                                <img src="img/coursesCards/icons/3.svg" alt="icon">
+                                            </div>
+                                            <div class="text-14 lh-1 text-light-1">@course.Level</div>
                                         </div>
-                                        <div class="text-14 lh-1 text-light-1">@course.Level</div>
+
                                     </div>
 
-                                </div>
-
-                                <div class="d-flex justify-between items-center pt-10 border-top-light">
-                                    <div class="d-flex items-center">
-                                        <img src="img/general/avatar-1.png" alt="image">
-                                            <div class="text-light-1 ml-10">@Model?.Coursesingle.ApplicationUser.UserName</div>
-                                    </div>
+                                    <div class="d-flex justify-between items-center pt-10 border-top-light">
+                                        <div class="d-flex items-center">
+                                            <img src="@Model.Coursesingle.InstructorUsers.ImageUrl" alt="image" style="border-radius:50%; height:30px; width:30px; ">
+                                            <div class="text-light-1 ml-10">@Model?.Coursesingle.InstructorUsers.UserName</div>
+                                        </div>
 
                                         <div class="d-flex items-center">
                                             @if (course.Fee == 0)
@@ -341,18 +418,50 @@
                                                 <div class="text-18 fw-500 text-dark-1">$@course.Fee</div>
                                             }
                                         </div>
-
+                                    </div>
                                 </div>
-                            </div>
                             }
                         </a>
                     </div>
 
                 }
 
-                
+
             </div>
     </section>
+   
+
+   <div class="mb-5" aria-label="Page navigation example">
+    <div class="pagination justify-content-center">
+        @if (Model.CurrentPage > 1)
+        {
+            if (culture == "ar-SA")
+            {
+                    <a class="page-link" href="@Url.Action("Details", "Instructor", new { id = Model.InstructorUser.Id, searchTerm = Model.SearchTerm, page = Model.CurrentPage - 1})">السابق</a>
+            }
+            else
+            {
+                    <a class="page-link" href="@Url.Action("Details", "Instructor", new { id = Model.InstructorUser.Id, searchTerm = Model.SearchTerm, page = Model.CurrentPage - 1})">Previous</a>
+            }
+        }
+        @for (int i = 1; i <= Model.TotalPagesInsTructor; i++)
+        {
+                <a class="page-link @(Model.CurrentPage == i ? "active" : "")" href="@Url.Action("Details", "Instructor", new { id = Model.InstructorUser.Id, searchTerm = Model.SearchTerm, page = i })">@i</a>
+        }
+        @if (Model.CurrentPage < Model.TotalPagesInsTructor)
+        {
+            if (culture == "ar-SA")
+            {
+                    <a class="page-link" href="@Url.Action("Details", "Instructor", new { id = Model.InstructorUser.Id, searchTerm = Model.SearchTerm, page = Model.CurrentPage + 1 })">التالي</a>
+            }
+            else
+            {
+                    <a class="page-link" href="@Url.Action("Details", "Instructor", new { id = Model.InstructorUser.Id, searchTerm = Model.SearchTerm, page = Model.CurrentPage + 1 })">Next</a>
+            }
+        }
+    </div>
+</div>
+
 
 
 
@@ -365,7 +474,9 @@
     $(document).ready(function () {
         $('.js-dropdown-link').click(function (e) {
             e.preventDefault();
-            var selectedCategory = $(this).attr('value');
+            var selectedCategory = $(this).data('category');
+
+            console.log('Selected Category ID:', selectedCategory);
 
             $('.course-card').hide(); // Hide all course cards
 
@@ -374,6 +485,41 @@
             } else {
                 $('.course-card[data-category="' + selectedCategory + '"]').show(); // Show course cards with the selected category
             }
+        });
+
+        // Check if the 'categoryid' parameter exists in the URL and trigger the click event on the corresponding category link if present
+        var urlParams = new URLSearchParams(window.location.search);
+        var categoryIDFromURL = urlParams.get('categoryid');
+
+        if (categoryIDFromURL !== null) {
+            $('.js-dropdown-link[data-category="' + categoryIDFromURL + '"]').click();
+        } else {
+            // If 'categoryid' is not present in the URL, show all course cards
+            $('.course-card').show();
+        }
+    });
+</script>
+
+
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var searchInput = document.getElementById("searchInput");
+        var courseCards = document.querySelectorAll(".course-card");
+
+        searchInput.addEventListener("input", function () {
+            var searchTerm = searchInput.value.toLowerCase().trim();
+
+            courseCards.forEach(function (card) {
+                var courseTitle = card.querySelector(".text-dark-1").innerText.toLowerCase();
+
+                if (courseTitle.includes(searchTerm)) {
+                    card.style.display = "block";
+                } else {
+                    card.style.display = "none";
+                }
+            });
         });
     });
 </script>

@@ -24,14 +24,14 @@ namespace LMS.Controllers
         }
 
         // GET: CourseCategory
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admins")]
         public IActionResult Index()
         {
             return View(_dbContext.CourseCategories.ToList());
         }
 
         // GET: CourseCategory/Create
-        [Authorize(Roles = "Admin, Instructor")]
+        [Authorize(Roles = "Admins")]
 
         public IActionResult Create()
         {
@@ -41,7 +41,7 @@ namespace LMS.Controllers
         // POST: CourseCategory/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin, Instructor")]
+        [Authorize(Roles = "Admins")]
 
         public IActionResult Create(CourseCategory category, IFormFile file)
         {
@@ -50,14 +50,14 @@ namespace LMS.Controllers
             if (file != null)
             {
                 string fileName = Guid.NewGuid().ToString();
-                var uploads = Path.Combine(wwwRootPath, @"images");
+                var uploads = Path.Combine(wwwRootPath, @"CourseCategory");
                 var extension = Path.GetExtension(file.FileName);
 
                 using (var fileStreams = new FileStream(Path.Combine(uploads, fileName + extension), FileMode.Create))
                 {
                     file.CopyTo(fileStreams);
                 }
-                category.Image = @"\images\" + fileName + extension;
+                category.Image = @"\CourseCategory\" + fileName + extension;
             }
 
             _dbContext.CourseCategories.Add(category);
@@ -70,7 +70,7 @@ namespace LMS.Controllers
 
 
         // GET: CourseCategory/Edit/5
-        [Authorize(Roles = "Admin, Instructor")]
+        [Authorize(Roles = "Admins")]
 
         public IActionResult Edit(int? id)
         {
@@ -91,7 +91,7 @@ namespace LMS.Controllers
         // POST: CourseCategory/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin, Instructor")]
+        [Authorize(Roles = "Admins")]
 
         public IActionResult Edit(int id, CourseCategory courseCategory, IFormFile file)
         {
@@ -106,7 +106,7 @@ namespace LMS.Controllers
             if (file != null)
             {
                 string fileName = Guid.NewGuid().ToString();
-                var uploads = Path.Combine(wwwRootPath, @"images");
+                var uploads = Path.Combine(wwwRootPath, @"CourseCategory");
                 var extension = Path.GetExtension(file.FileName);
 
                 // Delete the old image file if it exists
@@ -124,7 +124,7 @@ namespace LMS.Controllers
                 {
                     file.CopyTo(fileStreams);
                 }
-                courseCategory.Image = @"\images\" + fileName + extension;
+                courseCategory.Image = @"\CourseCategory\" + fileName + extension;
             }
 
             _dbContext.Update(courseCategory);
@@ -139,7 +139,7 @@ namespace LMS.Controllers
         // POST: CourseCategory/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin, Instructor")]
+        [Authorize(Roles = "Admins")]
 
         public IActionResult DeleteConfirmed(int id)
         {
@@ -157,7 +157,7 @@ namespace LMS.Controllers
 
             _dbContext.CourseCategories.Remove(courseCategory);
             _dbContext.SaveChanges();
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "CourseCategory");
         }
 
 

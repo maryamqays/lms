@@ -18,7 +18,7 @@ namespace LMS.Controllers
         }
 
         // GET: CourseChapters
-        [Authorize(Roles = "Admin, Instructor")]
+        [Authorize(Roles = "Admins, Instructors")]
 
         public IActionResult Index()
         {
@@ -27,22 +27,33 @@ namespace LMS.Controllers
         }
 
         // GET: CourseChapters/Create
-        [Authorize(Roles = "Admin, Instructor")]
+        [Authorize(Roles = "Admins, Instructors")]
 
         public IActionResult Create(int courseId)
         {
             ViewBag.Courses = _dbContext.Courses.ToList();
+
+            // Check if the provided courseId exists in the database
+            var course = _dbContext.Courses.Find(courseId);
+            if (course == null)
+            {
+                // Handle the case when the courseId is not found
+                return NotFound();
+            }
+
             var model = new CourseChapter
             {
-                courseId = courseId
+                courseId = courseId,
+                Course = course // Include the Course entity in the CourseChapter model
             };
+
             return View(model);
         }
 
         // POST: CourseChapters/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin, Instructor")]
+        [Authorize(Roles = "Admins, Instructors")]
 
         public IActionResult Create(CourseChapter Chapter)
         {
@@ -52,7 +63,7 @@ namespace LMS.Controllers
         }
 
         // GET: CourseChapters/Edit/5
-        [Authorize(Roles = "Admin, Instructor")]
+        [Authorize(Roles = "Admins, Instructors")]
 
         public IActionResult Edit(int? id)
         {
@@ -75,7 +86,7 @@ namespace LMS.Controllers
         // POST: CourseChapters/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin, Instructor")]
+        [Authorize(Roles = "Admins, Instructors")]
 
         public IActionResult Edit(int id, CourseChapter Chapter)
         {
@@ -92,7 +103,7 @@ namespace LMS.Controllers
         // POST: CourseChapters/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin, Instructor")]
+        [Authorize(Roles = "Admins, Instructors")]
 
         public IActionResult Delete(int id)
         {

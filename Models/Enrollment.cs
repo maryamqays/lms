@@ -10,11 +10,14 @@ namespace LMS.Models
         [Key]
         public int Id { get; set; }
 
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:d}")]// short date formant
+        public DateTime DateOfOfEnrollment{ get; set; }
+
         public int CourseId { get; set; }
         public Course Course { get; set; }
 
-        public string UserId { get; set; }
-        public IdentityUser User { get; set; }
+        public string ApplicationUserId { get; set; }
 
 
         // add date now 
