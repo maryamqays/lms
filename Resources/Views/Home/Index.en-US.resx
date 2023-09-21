@@ -117,4 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="School Achievements" xml:space="preserve">
+    <value>Imam Academy statistics</value>
+  </data>
+  <data name="unique online course list designs" xml:space="preserve">
+    <value>Courses hosted on Imam Academy learning management system</value>
+  </data>
 </root>
