@@ -27,7 +27,7 @@ namespace LMS.Models
 
         public int CourseHours { get; set; }
 
-
+        public bool Passedexam { get; set; }
 
     }
 }

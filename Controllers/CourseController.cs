@@ -31,6 +31,50 @@ namespace LMS.Controllers
 
         }
 
+
+        public async Task<IActionResult> Exam(int courseId)
+        {
+            var questions = await _dbContext.CourseExams  
+                .Where(q => q.CourseId == courseId)
+                .OrderBy(r => Guid.NewGuid())  // This randomizes the questions.
+                .Take(5)
+                .ToListAsync();
+
+            return View(questions); // Return the view with the questions as its model.
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SubmitExam(List<CourseExam> submittedAnswers, int courseId)
+        {
+            if (submittedAnswers == null || !submittedAnswers.Any())
+                return BadRequest("No answers provided.");
+
+            int correctAnswersCount = 0;
+
+            foreach (var answer in submittedAnswers)
+            {
+                var originalQuestion = await _dbContext.CourseExams.FindAsync(answer.Id);
+
+                if (originalQuestion != null && originalQuestion.CorrectAnswer == answer.CorrectAnswer)
+                {
+                    correctAnswersCount++;
+                }
+            }
+
+            if (correctAnswersCount >= 4)
+            {
+                return RedirectToAction("Certificate", new { Id = courseId });  // Redirect to Certificate action if passed.
+            }
+            else
+            {
+                return Content("Failed");
+            }
+        }
+
+
+
+
+
         // GET: course
         public IActionResult Index(int pageIndex = 1, int pageSize = 8, string searchTerm = "")
         {
@@ -292,7 +336,8 @@ namespace LMS.Controllers
             lessonViewModel.CourseRatings = _dbContext.CourseRating.Where(r => r.CourseId == id).ToList();
             lessonViewModel.CourseCompletes = _dbContext.CourseCompletes.Where(cc => cc.ApplicationUserId == userId).ToList();
             lessonViewModel.enrollments = _dbContext.Enrollments.Where(e => e.CourseId == id).ToList();
-
+            lessonViewModel.Certificate = _dbContext.certificateUsers
+                .SingleOrDefault(c => c.CourseId == id && c.ApplicationUserId == userId);
             lessonViewModel.courseComments = _dbContext.CourseComments
            .Where(e => e.CourseId == id && e.ApplicationUserId != null)
            //.Include(c => c.ApplicationUser)
@@ -617,7 +662,8 @@ namespace LMS.Controllers
                 DateOfCertification = DateTime.Now,
                 CourseHours = courseHours,
                 Course = course,
-               // User = user
+                Passedexam=true
+                // User = user
             };
 
 
@@ -658,7 +704,9 @@ namespace LMS.Controllers
                 ApplicationUserId = user,
                 DateOfCertification = DateTime.Now,
                 Course = course,
-              //  User = user
+                Passedexam = true
+
+                //  User = user
             };
 
             _dbContext.certificateUsers.Add(certificate);
