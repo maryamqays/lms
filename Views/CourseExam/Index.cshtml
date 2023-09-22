@@ -1,0 +1,50 @@
+﻿@model IEnumerable<LMS.Models.CourseExam>
+@{
+    Layout = "AdminLayout";
+}
+<div class="d-flex justify-content-between align-items-center mb-5">
+    <h2>Course Exams</h2>
+    @Html.ActionLink("Create New Exam", "Create", "CourseExam", new { courseId = @Context.Request.Query["courseId"] }, new { @class = "text-white btn btn-primary mt-3" })
+
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Question</th>
+            <th>Answer 1</th>
+            <th>Answer 2</th>
+            <th>Answer 3</th>
+            <th>Answer 4</th>
+            <th>Correct Answer</th>
+            <th>Language</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var exam in Model)
+        {
+            <tr>
+                <td>@exam.Question</td>
+                <td>@exam.Answer1</td>
+                <td>@exam.Answer2</td>
+                <td>@exam.Answer3</td>
+                <td>@exam.Answer4</td>
+                <td>@exam.CorrectAnswer</td>
+                <td>@exam.Langs</td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = exam.Id }, new { @class = "btn btn-warning text-white" })
+                    <form method="post" action="@Url.Action("Delete", new { id = exam.Id })"
+                          onsubmit="return confirm('Are you sure you want to delete this?');">
+                        <input type="submit" value="Delete" class="btn btn-danger text-white" />
+                    </form>
+                </td>
+
+            </tr>
+
+        }
+    </tbody>
+
+</table>
+
+

@@ -31,5 +31,7 @@ namespace LMS.Data
 
         public DbSet<CourseComplete> CourseCompletes { get; set; }
 
+        public DbSet<CourseExam> CourseExams { get; set; }
+
     }
 }

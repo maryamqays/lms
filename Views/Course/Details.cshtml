@@ -32,7 +32,7 @@
     style="@(culture == "ar-SA" ? "margin-top:69px;" : "")"
     @(culture == "ar-SA" ? "margin-top:7px;" : "") "
     *@
-    <section data-anim="fade" class="breadcrumbs" >
+    <section data-anim="fade" class="breadcrumbs">
 
         <div class="container">
             <div class="row">
@@ -70,11 +70,14 @@
                         if (User.IsInRole("Admins") || (User.IsInRole("Instructor") && Model.Course.InstructorUserId == UserManager.GetUserId(User)))
                         {
                             <div style="display: inline;">
+                                <a class="btn btn-dark text-white pt-2" href="@Url.Action("Index", "CourseExam", new { courseId = Model.Course.Id })">Add  Exam</a>
+
                                 <form asp-controller="Course" asp-route-id="@Model.Course.Id" asp-action="Delete" method="post" onsubmit="return confirm('Are you sure you want to delete this course?');">
                                     @Html.AntiForgeryToken()
                                     <button type="submit"> <i class="fa-solid fa-trash"></i> </button>
                                 </form>
                                 <a asp-controller="Course" asp-action="Edit" asp-route-id="@Model.Course.Id"><i class="fa-solid fa-pen-to-square"></i></a>
+
                             </div>
                         }
                     }
@@ -177,7 +180,6 @@
                             .image-link:hover + .image-popup {
                                 display: block;
                             }
-
                         </style>
                         <p class="col-xl-9 mt-20">@Html.Raw(@Model.Course.Overview)</p>
 
@@ -1075,13 +1077,15 @@
                                                     <form asp-action="AddComment" id="commentForm" class="contact-form respondForm__form row y-gap-30 pt-30">
                                                         <div class="col-12">
                                                             <label for="comment" class="text-16 lh-1 fw-500 text-dark-1 mb-10">@Localizer["Add a Comment"]</label>
-                                                            @if(culture=="ar-SA"){
-                                                                                                                            <input type="text" id="Comment" name="Comment" placeholder="التعليق" style="height: 100px;"></input>
+                                                            @if (culture == "ar-SA")
+                                                            {
+                                                                <input type="text" id="Comment" name="Comment" placeholder="التعليق" style="height: 100px;"></input>
 
                                                             }
-                                                            else{
+                                                            else
+                                                            {
 
-                                                                                                                            <input type="text" id="Comment" name="Comment" placeholder="Message" style="height: 100px;"></input>
+                                                                <input type="text" id="Comment" name="Comment" placeholder="Message" style="height: 100px;"></input>
 
                                                             }
                                                         </div>
@@ -1206,9 +1210,9 @@
                                                 </div>
                                             }
 
-                                     
+
                                         </div>
-                                     
+
                                         <input type="hidden" id="currentUserImage" value="@Model.Course.InstructorUsers.ImageUrl" />
                                         <script>
                                             $("#commentForm").submit(function (event) {
@@ -1240,23 +1244,23 @@
                                                         $("#loading").hide();
 
                                                         var newCommentHtml = `
-                                                                                                                                                                                                                                                <div id="${commentId}" class="comments__item-inner md:direction-column mt-4">
-                                                                                                                                                                                                                                                    <div class="comments__img mr-20">
-                                                                                                                                                                                                                                                        <img class="bg-image rounded-full js-lazy" src="${imageurl}" />
-                                                                                                                                                                                                                                                    </div>
-                                                                                                                                                                                                                                                    <div class="comments__body md:mt-15">
-                                                                                                                                                                                                                                                        <div class="comments__header">
-                                                                                                                                                                                                                                                            <h4 class="text-17 fw-500 lh-15">
-                                                                                                                                                                                                                                                                ${userName}
-                                                                                                                                                                                                                                                                <span class="text-13 text-light-1 fw-400">Just now</span>
-                                                                                                                                                                                                                                                            </h4>
-                                                                                                                                                                                                                                                            <div class="stars"></div>
-                                                                                                                                                                                                                                                        </div>
-                                                                                                                                                                                                                                                        <div class="comments__text mt-10">
-                                                                                                                                                                                                                                                            <p>${comment}</p>
-                                                                                                                                                                                                                                                        </div>
-                                                                                                                                                                                                                                                    </div>
-                                                                                                                                                                                                                                                </div>`;
+                                                                                                                                                                                                                                                                                            <div id="${commentId}" class="comments__item-inner md:direction-column mt-4">
+                                                                                                                                                                                                                                                                                                <div class="comments__img mr-20">
+                                                                                                                                                                                                                                                                                                    <img class="bg-image rounded-full js-lazy" src="${imageurl}" />
+                                                                                                                                                                                                                                                                                                </div>
+                                                                                                                                                                                                                                                                                                <div class="comments__body md:mt-15">
+                                                                                                                                                                                                                                                                                                    <div class="comments__header">
+                                                                                                                                                                                                                                                                                                        <h4 class="text-17 fw-500 lh-15">
+                                                                                                                                                                                                                                                                                                            ${userName}
+                                                                                                                                                                                                                                                                                                            <span class="text-13 text-light-1 fw-400">Just now</span>
+                                                                                                                                                                                                                                                                                                        </h4>
+                                                                                                                                                                                                                                                                                                        <div class="stars"></div>
+                                                                                                                                                                                                                                                                                                    </div>
+                                                                                                                                                                                                                                                                                                    <div class="comments__text mt-10">
+                                                                                                                                                                                                                                                                                                        <p>${comment}</p>
+                                                                                                                                                                                                                                                                                                    </div>
+                                                                                                                                                                                                                                                                                                </div>
+                                                                                                                                                                                                                                                                                            </div>`;
 
                                                         // Append the comment at the bottom
                                                         $("#comments").append(newCommentHtml);
@@ -1299,18 +1303,32 @@
 
                             <div class="tabs__pane -tab-item-5">
                                 <div class="d-flex align-items-center">
-                                    @if (Model.AllContentsCompleted)
+                                    @if (Model.AllContentsCompleted != null)
                                     {
-                                        <a href="/Course/Certificate/@Model.Course.Id" class="text-20 fw-500">
-                                            @Localizer["Download Your Certificate"]
-                                        </a>
-                                    }
+                                        @if (Model.Certificate == null || !Model.Certificate.Passedexam)
+                                        {
+                                            <a href="/Course/Exam?courseId=@Model.Course.Id" class="text-20 fw-500">
+                                                @Localizer["Attend Exam for Certificate"]
+                                            </a>
+                                        }
 
+
+                                        else if (Model.AllContentsCompleted && Model.Certificate != null && Model.Certificate.Passedexam)
+                                        {
+                                            <a href="/Course/DownloadCertificate/@Model.Course.Id" class="text-20 fw-500">
+                                                @Localizer["Download Certificate"]
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <h3> @Localizer["finish the course first"]  </h3>
+                                        }
+
+                                    }
                                     else
                                     {
-                                        <h3> @Localizer["You Need to Finish The Course First"]  </h3>
+                                        <h3>@Localizer["finish the course first"] </h3>
                                     }
-
                                 </div>
 
 
